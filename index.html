@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Samuel Success (SAMSUC) — Computer Engineering student, Frontend Developer & UI/UX Designer. Building the future of connected digital experiences." />
+  <meta name="theme-color" content="#050505" />
+  <title>Samuel Success — SAMSUC | Building the Future of Connected Digital Experiences</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            void: '#050505',
+            navy: '#08111F',
+            electric: '#00D4FF',
+            cyan: '#22D3EE',
+            softpurple: '#A78BFA',
+            glass: 'rgba(255,255,255,0.06)',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Space Grotesk', 'Inter', 'sans-serif'],
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'pulse-glow': 'pulse-glow 3s ease-in-out infinite',
+            'spin-slow': 'spin 20s linear infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-20px)' },
+            },
+            'pulse-glow': {
+              '0%, 100%': { opacity: '0.4' },
+              '50%': { opacity: '1' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  
+  <!-- Lenis Smooth Scroll -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+  
+  <!-- Three.js for background -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-void text-white font-sans antialiased overflow-x-hidden">
+  
+  <!-- Loading Screen -->
+  <div id="loader" class="fixed inset-0 z-[100] bg-void flex flex-col items-center justify-center">
+    <div class="relative w-24 h-24 mb-8">
+      <div class="absolute inset-0 rounded-full border border-electric/30"></div>
+      <div class="absolute inset-2 rounded-full border border-cyan/40 animate-spin" style="animation-duration: 3s;"></div>
+      <div class="absolute inset-4 rounded-full border-t-2 border-electric animate-spin" style="animation-duration: 1.2s;"></div>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <span class="text-electric text-xs tracking-[0.3em] font-medium">SAMSUC</span>
+      </div>
+    </div>
+    <p class="text-white/40 text-sm tracking-widest uppercase" id="loader-text">Initializing experience</p>
+    <div class="mt-6 w-48 h-[2px] bg-white/10 overflow-hidden rounded-full">
+      <div id="loader-bar" class="h-full bg-gradient-to-r from-electric to-cyan w-0 transition-all duration-300"></div>
+    </div>
+  </div>
+
+  <!-- Custom Cursor -->
+  <div id="cursor" class="fixed top-0 left-0 w-4 h-4 rounded-full pointer-events-none z-[90] mix-blend-difference bg-white"></div>
+  <div id="cursor-trail" class="fixed top-0 left-0 w-10 h-10 rounded-full pointer-events-none z-[89] border border-electric/50"></div>
+
+  <!-- Scroll Progress -->
+  <div id="scroll-progress" class="fixed top-0 left-0 h-[2px] bg-gradient-to-r from-electric via-cyan to-softpurple z-[80] origin-left scale-x-0"></div>
+
+  <!-- Floating Glass Navbar -->
+  <header id="navbar" class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[min(90%,720px)] transition-all duration-500">
+    <nav class="glass-nav flex items-center justify-between px-6 py-3 rounded-full border border-white/10 backdrop-blur-xl bg-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+      <a href="#hero" class="font-display font-semibold text-sm tracking-tight flex items-center gap-2 group">
+        <span class="w-2 h-2 rounded-full bg-electric group-hover:scale-125 transition-transform"></span>
+        SAMSUC
+      </a>
+      <ul class="hidden md:flex items-center gap-1 text-sm text-white/70">
+        <li><a href="#about" class="nav-link px-3 py-1.5 rounded-full hover:text-white hover:bg-white/5 transition-colors" data-section="about">About</a></li>
+        <li><a href="#skills" class="nav-link px-3 py-1.5 rounded-full hover:text-white hover:bg-white/5 transition-colors" data-section="skills">Skills</a></li>
+        <li><a href="#projects" class="nav-link px-3 py-1.5 rounded-full hover:text-white hover:bg-white/5 transition-colors" data-section="projects">Work</a></li>
+        <li><a href="#vision" class="nav-link px-3 py-1.5 rounded-full hover:text-white hover:bg-white/5 transition-colors" data-section="vision">Vision</a></li>
+        <li><a href="#blog" class="nav-link px-3 py-1.5 rounded-full hover:text-white hover:bg-white/5 transition-colors" data-section="blog">Blog</a></li>
+        <li><a href="#contact" class="nav-link px-3 py-1.5 rounded-full hover:text-white hover:bg-white/5 transition-colors" data-section="contact">Contact</a></li>
+      </ul>
+      <button id="menu-toggle" class="md:hidden p-2 text-white/80" aria-label="Menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 7h16M4 12h16M4 17h16"/>
+        </svg>
+      </button>
+      <div class="hidden md:flex items-center gap-2">
+        <a href="assets/Samuel-Success-CV.pdf" download="Samuel-Success-CV.pdf" data-profile="cv" class="magnetic-btn px-4 py-1.5 rounded-full border border-white/10 text-sm text-white/70 hover:text-white hover:border-electric/40 transition-all">
+          Download CV
+        </a>
+        <a href="#contact" class="magnetic-btn px-4 py-1.5 rounded-full bg-white/10 border border-white/10 text-sm hover:bg-electric/20 hover:border-electric/40 transition-all">
+          Let's talk
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="fixed inset-0 z-40 bg-void/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8 opacity-0 pointer-events-none transition-opacity duration-400">
+    <a href="#about" class="mobile-link text-3xl font-display font-medium">About</a>
+    <a href="#skills" class="mobile-link text-3xl font-display font-medium">Skills</a>
+    <a href="#projects" class="mobile-link text-3xl font-display font-medium">Work</a>
+    <a href="#vision" class="mobile-link text-3xl font-display font-medium">Vision</a>
+    <a href="#contact" class="mobile-link text-3xl font-display font-medium">Contact</a>
+  </div>
+
+  <!-- Background Canvas -->
+  <canvas id="bg-canvas" class="fixed inset-0 z-0 pointer-events-none"></canvas>
+
+  <!-- Main Content -->
+  <main class="relative z-10">
+    
+    <!-- ========== HERO ========== -->
+    <section id="hero" class="relative min-h-screen flex items-center overflow-hidden">
+      <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-electric/10 rounded-full blur-[120px] animate-pulse-glow"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-softpurple/10 rounded-full blur-[100px] animate-pulse-glow" style="animation-delay: 1.5s;"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-white/5 rounded-full animate-spin-slow"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-cyan/10 rounded-full animate-spin-slow" style="animation-direction: reverse; animation-duration: 30s;"></div>
+      </div>
+
+      <div class="container mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-12 items-center min-h-screen py-24">
+        <!-- Text Content -->
+        <div class="relative z-10 order-2 lg:order-1">
+          <div class="overflow-hidden mb-6">
+            <p class="hero-label text-electric/80 text-sm tracking-[0.25em] uppercase font-medium opacity-0 translate-y-8">
+              Founder • Computer Engineering Student • Frontend Developer
+            </p>
+          </div>
+          
+          <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.05] tracking-tight mb-8">
+            <span class="block overflow-hidden">
+              <span class="hero-title-line inline-block opacity-0 translate-y-full">The future isn't</span>
+            </span>
+            <span class="block overflow-hidden">
+              <span class="hero-title-line inline-block opacity-0 translate-y-full">something I wait for.</span>
+            </span>
+            <span class="block overflow-hidden">
+              <span class="hero-title-line inline-block opacity-0 translate-y-full bg-gradient-to-r from-white via-cyan to-electric bg-clip-text text-transparent">It's something I build.</span>
+            </span>
+          </h1>
+
+          <div class="space-y-3 mb-10 max-w-lg">
+            <p class="hero-intro opacity-0 translate-y-6 text-white/60 text-lg leading-relaxed">Building technology that brings the world into one place.</p>
+            <p class="hero-intro opacity-0 translate-y-6 text-white/60 text-lg leading-relaxed">I craft digital experiences that feel alive, connected, and purposeful.</p>
+          </div>
+
+          <div class="flex flex-wrap gap-4 opacity-0 translate-y-6" id="hero-cta">
+            <a href="#projects" class="magnetic-btn group relative px-8 py-3.5 rounded-full bg-white text-void font-medium overflow-hidden">
+              <span class="relative z-10">View selected work</span>
+              <span class="absolute inset-0 bg-gradient-to-r from-electric to-cyan opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+              <span class="absolute inset-0 bg-white group-hover:bg-transparent transition-colors duration-300"></span>
+            </a>
+            <a href="assets/Samuel-Success-CV.pdf" download="Samuel-Success-CV.pdf" data-profile="cv" class="magnetic-btn px-8 py-3.5 rounded-full border border-white/20 text-white/90 hover:border-electric/50 hover:bg-electric/5 transition-all">
+              Download CV
+            </a>
+            <a href="#contact" class="magnetic-btn px-8 py-3.5 rounded-full border border-white/20 text-white/90 hover:border-electric/50 hover:bg-electric/5 transition-all">
+              Start a project
+            </a>
+          </div>
+
+          <div class="mt-12 flex items-center gap-3 opacity-0" id="hero-status">
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
+            </span>
+            <span class="text-sm text-white/50">Available for freelance & collaboration · <span id="local-time"></span></span>
+          </div>
+        </div>
+
+        <!-- Portrait -->
+        <div class="relative order-1 lg:order-2 flex justify-center lg:justify-end">
+          <div class="portrait-wrapper relative w-full max-w-md lg:max-w-lg aspect-[3/4] group" id="portrait-container">
+            <div class="absolute -inset-8 rounded-full border border-electric/20 animate-spin-slow pointer-events-none"></div>
+            <div class="absolute -inset-16 rounded-full border border-cyan/10 animate-spin-slow pointer-events-none" style="animation-direction: reverse; animation-duration: 25s;"></div>
+            
+            <div class="relative w-full h-full rounded-3xl overflow-hidden border border-white/10 shadow-[0_0_80px_rgba(0,212,255,0.15)]">
+              <img 
+                src="images/portrait.png" id="hero-portrait" data-profile="portrait" class="hero-portrait"
+                alt="Portrait of Samuel Success — SAMSUC" 
+                class="w-full h-full object-cover object-center scale-105 group-hover:scale-100 transition-transform duration-700 ease-out"
+                id="portrait-img"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-void/80 via-transparent to-transparent"></div>
+              <div class="absolute inset-0 bg-gradient-to-br from-electric/10 via-transparent to-softpurple/10 mix-blend-overlay"></div>
+              
+              <div class="absolute inset-0 overflow-hidden pointer-events-none">
+                <div class="hologram-line absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan/60 to-transparent"></div>
+              </div>
+            </div>
+
+            <div class="absolute -top-4 -right-4 w-3 h-3 rounded-full bg-electric/80 blur-[1px] animate-float"></div>
+            <div class="absolute top-1/3 -left-6 w-2 h-2 rounded-full bg-cyan/70 animate-float" style="animation-delay: 1s;"></div>
+            <div class="absolute bottom-1/4 -right-8 w-2.5 h-2.5 rounded-full bg-softpurple/60 animate-float" style="animation-delay: 2s;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0" id="scroll-hint">
+        <span class="text-[10px] tracking-[0.3em] uppercase text-white/40">Scroll</span>
+        <div class="w-[1px] h-10 bg-gradient-to-b from-white/40 to-transparent relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-full h-1/2 bg-electric animate-[scroll-line_1.5s_ease-in-out_infinite]"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== ABOUT ========== -->
+    <section id="about" class="relative py-32 lg:py-40">
+      <div class="container mx-auto px-6 lg:px-12">
+        <div class="grid lg:grid-cols-12 gap-16 items-start">
+          <div class="lg:col-span-5">
+            <p class="section-label text-electric text-sm tracking-[0.2em] uppercase mb-4 opacity-0">About</p>
+            <h2 class="font-display text-4xl lg:text-5xl font-bold leading-tight mb-8 opacity-0 translate-y-8">
+              Hi, I'm <span data-profile="displayName">Samuel Success</span>
+            </h2>
+            <div class="space-y-5 text-white/60 text-lg leading-relaxed">
+              <p class="about-text opacity-0 translate-y-6">
+                A Computer Engineering student and passionate software developer from Nigeria. I design immersive digital experiences that combine creativity, modern technology, and thoughtful user experience.
+              </p>
+              <p class="about-text opacity-0 translate-y-6">
+                Beyond writing code, I'm fascinated by solving real-world problems with technology. Every project I build helps me move closer to a larger vision: creating products that simplify people's lives and connect the world in meaningful ways.
+              </p>
+              <p class="about-text opacity-0 translate-y-6">
+                I'm constantly learning, experimenting, and improving my skills because I believe the future belongs to those who build it.
+              </p>
+            </div>
+          </div>
+          
+          <div class="lg:col-span-7 grid sm:grid-cols-2 gap-6">
+            <div class="stat-card glass-card p-8 rounded-3xl border border-white/10 opacity-0 translate-y-10">
+              <div class="text-5xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-br from-white to-white/40 mb-2">
+                <span class="counter" data-target="15">0</span>+
+              </div>
+              <p class="text-white/50 text-sm tracking-wide">Projects Built</p>
+            </div>
+            <div class="stat-card glass-card p-8 rounded-3xl border border-white/10 opacity-0 translate-y-10">
+              <div class="text-5xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-br from-electric to-cyan mb-2">
+                <span class="counter" data-target="20">0</span>+
+              </div>
+              <p class="text-white/50 text-sm tracking-wide">Technologies Learned</p>
+            </div>
+            <div class="stat-card glass-card p-8 rounded-3xl border border-white/10 opacity-0 translate-y-10">
+              <div class="text-5xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-br from-softpurple to-electric mb-2">
+                <span class="counter" data-target="10">0</span>+
+              </div>
+              <p class="text-white/50 text-sm tracking-wide">Digital Products Created</p>
+            </div>
+            <div class="stat-card glass-card p-8 rounded-3xl border border-white/10 opacity-0 translate-y-10">
+              <div class="text-5xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-br from-cyan to-white mb-2">
+                <span class="counter" data-target="1000">0</span>+
+              </div>
+              <p class="text-white/50 text-sm tracking-wide">Hours Learning</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SKILLS ========== -->
+    <section id="skills" class="relative py-32 lg:py-40 overflow-hidden">
+      <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-electric/5 rounded-full blur-[100px]"></div>
+      </div>
+      <div class="container mx-auto px-6 lg:px-12">
+        <div class="mb-16">
+          <p class="section-label text-electric text-sm tracking-[0.2em] uppercase mb-4 opacity-0">Capabilities</p>
+          <h2 class="font-display text-4xl lg:text-5xl font-bold opacity-0 translate-y-8">Tools I use to build the future</h2>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="skills-grid">
+          <p id="skills-loading" class="col-span-full text-white/40 text-sm">Loading skills…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== PROJECTS ========== -->
+    <section id="projects" class="relative py-32 lg:py-40">
+      <div class="container mx-auto px-6 lg:px-12">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+          <div>
+            <p class="section-label text-electric text-sm tracking-[0.2em] uppercase mb-4 opacity-0">Selected Work</p>
+            <h2 class="font-display text-4xl lg:text-5xl font-bold opacity-0 translate-y-8">Projects that push boundaries</h2>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8" id="projects-grid">
+          <p id="projects-loading" class="col-span-full text-white/40 text-sm">Loading projects…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== VISION ========== -->
+    <section id="vision" class="relative py-32 lg:py-40">
+      <div class="container mx-auto px-6 lg:px-12 max-w-4xl text-center">
+        <p class="section-label text-electric text-sm tracking-[0.2em] uppercase mb-4 opacity-0">Beyond the Portfolio</p>
+        <h2 class="font-display text-4xl lg:text-5xl font-bold mb-8 opacity-0 translate-y-8">Bringing the world into one place</h2>
+        
+        <div class="space-y-6 text-white/60 text-lg leading-relaxed opacity-0 translate-y-8 about-text">
+          <p>
+            This portfolio is more than a collection of projects. It's the beginning of a much bigger journey.
+          </p>
+          <p>
+            I believe technology should connect people instead of separating them. Today, our lives are scattered across dozens of websites and applications. My long-term vision is to build digital experiences that simplify the way people learn, work, communicate, create, buy, sell, and grow—all within one connected ecosystem.
+          </p>
+          <p class="text-white/80 font-medium">
+            Mission: Bringing the world into one place.
+          </p>
+        </div>
+
+        <div class="mt-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="p-5 rounded-2xl border border-white/10 bg-white/[0.03] text-sm text-white/70">Innovation</div>
+          <div class="p-5 rounded-2xl border border-white/10 bg-white/[0.03] text-sm text-white/70">Creativity</div>
+          <div class="p-5 rounded-2xl border border-white/10 bg-white/[0.03] text-sm text-white/70">Curiosity</div>
+          <div class="p-5 rounded-2xl border border-white/10 bg-white/[0.03] text-sm text-white/70">Consistency</div>
+          <div class="p-5 rounded-2xl border border-white/10 bg-white/[0.03] text-sm text-white/70">Problem Solving</div>
+          <div class="p-5 rounded-2xl border border-white/10 bg-white/[0.03] text-sm text-white/70">Continuous Learning</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== EXPERIENCE / TIMELINE ========== -->
+    <section id="experience" class="relative py-32 lg:py-40">
+      <div class="container mx-auto px-6 lg:px-12 max-w-4xl">
+        <p class="section-label text-electric text-sm tracking-[0.2em] uppercase mb-4 opacity-0 text-center">Journey</p>
+        <h2 class="font-display text-4xl lg:text-5xl font-bold text-center mb-20 opacity-0 translate-y-8">The path so far</h2>
+
+        <div class="relative">
+          <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-electric/50 via-white/10 to-transparent md:-translate-x-1/2"></div>
+
+          <div class="space-y-16">
+            <div class="timeline-item relative flex flex-col md:flex-row md:items-center gap-6 opacity-0 translate-y-10">
+              <div class="md:w-1/2 md:text-right md:pr-12 order-2 md:order-1">
+                <span class="text-electric text-sm tracking-wide">2025</span>
+                <h3 class="font-display text-xl font-semibold mt-1">Started Learning</h3>
+                <p class="text-white/50 text-sm mt-2">Began learning programming and web development.</p>
+              </div>
+              <div class="absolute left-4 md:left-1/2 w-3 h-3 rounded-full bg-electric border-4 border-void md:-translate-x-1/2 z-10 order-1"></div>
+              <div class="md:w-1/2 md:pl-12 order-3 hidden md:block"></div>
+            </div>
+
+            <div class="timeline-item relative flex flex-col md:flex-row md:items-center gap-6 opacity-0 translate-y-10">
+              <div class="md:w-1/2 md:pr-12 order-2 md:order-1 hidden md:block"></div>
+              <div class="absolute left-4 md:left-1/2 w-3 h-3 rounded-full bg-cyan border-4 border-void md:-translate-x-1/2 z-10 order-1"></div>
+              <div class="md:w-1/2 md:pl-12 order-3">
+                <span class="text-cyan text-sm tracking-wide">2026</span>
+                <h3 class="font-display text-xl font-semibold mt-1">Building & Studying</h3>
+                <p class="text-white/50 text-sm mt-2">Began building premium websites and digital products while studying Computer Engineering.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item relative flex flex-col md:flex-row md:items-center gap-6 opacity-0 translate-y-10">
+              <div class="md:w-1/2 md:text-right md:pr-12 order-2 md:order-1">
+                <span class="text-softpurple text-sm tracking-wide">Today</span>
+                <h3 class="font-display text-xl font-semibold mt-1">Creating the Future</h3>
+                <p class="text-white/50 text-sm mt-2">Focused on creating futuristic digital experiences and working toward building a unified digital platform that brings the world into one place.</p>
+              </div>
+              <div class="absolute left-4 md:left-1/2 w-3 h-3 rounded-full bg-softpurple border-4 border-void md:-translate-x-1/2 z-10 order-1"></div>
+              <div class="md:w-1/2 md:pl-12 order-3 hidden md:block"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== TESTIMONIALS ========== -->
+    <section id="testimonials" class="relative py-32 lg:py-40">
+      <div class="container mx-auto px-6 lg:px-12">
+        <div class="mb-16 text-center">
+          <p class="section-label text-electric text-sm tracking-[0.2em] uppercase mb-4 opacity-0">Testimonials</p>
+          <h2 class="font-display text-4xl lg:text-5xl font-bold opacity-0 translate-y-8">What people say</h2>
+        </div>
+        <div id="testimonials-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <p id="testimonials-loading" class="col-span-full text-center text-white/40 text-sm">Loading…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== BLOG ========== -->
+    <section id="blog" class="relative py-32 lg:py-40">
+      <div class="container mx-auto px-6 lg:px-12">
+        <div class="mb-16">
+          <p class="section-label text-electric text-sm tracking-[0.2em] uppercase mb-4 opacity-0">Journal</p>
+          <h2 class="font-display text-4xl lg:text-5xl font-bold opacity-0 translate-y-8">Latest writing</h2>
+        </div>
+        <div id="blog-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <p id="blog-loading" class="col-span-full text-white/40 text-sm">Loading posts…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CONTACT ========== -->
+    <section id="contact" class="relative py-32 lg:py-40">
+      <div class="container mx-auto px-6 lg:px-12 max-w-3xl">
+        <div class="text-center mb-16">
+          <p class="section-label text-electric text-sm tracking-[0.2em] uppercase mb-4 opacity-0">Contact</p>
+          <h2 class="font-display text-4xl lg:text-5xl font-bold mb-6 opacity-0 translate-y-8">Let's build something extraordinary</h2>
+          <p class="text-white/50 text-lg opacity-0 translate-y-6">Available for freelance and collaboration.</p>
+          <p class="text-white/40 text-sm mt-2 opacity-0 translate-y-6">Nigeria · <a href="mailto:samsuc34@gmail.com" class="text-electric hover:underline">samsuc34@gmail.com</a></p>
+        </div>
+
+        <form id="contact-form" class="space-y-6 opacity-0 translate-y-10" novalidate>
+          <div class="grid sm:grid-cols-2 gap-6">
+            <div class="relative">
+              <input type="text" id="name" name="name" required minlength="2" maxlength="80" autocomplete="name" class="glass-input peer w-full px-5 py-4 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-transparent focus:outline-none focus:border-electric/50 focus:bg-white/[0.07] transition-all" placeholder="Name" />
+              <label for="name" class="absolute left-5 top-4 text-white/40 text-sm transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-electric peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:text-xs bg-void px-1">Name</label>
+            </div>
+            <div class="relative">
+              <input type="email" id="email" name="email" required autocomplete="email" class="glass-input peer w-full px-5 py-4 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-transparent focus:outline-none focus:border-electric/50 focus:bg-white/[0.07] transition-all" placeholder="Email" />
+              <label for="email" class="absolute left-5 top-4 text-white/40 text-sm transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-electric peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:text-xs bg-void px-1">Email</label>
+            </div>
+          </div>
+          <div class="relative">
+            <input type="text" id="subject" name="subject" maxlength="120" class="glass-input peer w-full px-5 py-4 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-transparent focus:outline-none focus:border-electric/50 focus:bg-white/[0.07] transition-all" placeholder="Subject" />
+            <label for="subject" class="absolute left-5 top-4 text-white/40 text-sm transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-electric peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:text-xs bg-void px-1">Subject (optional)</label>
+          </div>
+          <div class="relative">
+            <textarea id="message" name="message" rows="5" required minlength="10" maxlength="2000" class="glass-input peer w-full px-5 py-4 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-transparent focus:outline-none focus:border-electric/50 focus:bg-white/[0.07] transition-all resize-none" placeholder="Message"></textarea>
+            <label for="message" class="absolute left-5 top-4 text-white/40 text-sm transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-electric peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:text-xs bg-void px-1">Message</label>
+          </div>
+
+          <!-- Honeypot (spam protection) -->
+          <input type="text" name="website" id="website" class="hidden" tabindex="-1" autocomplete="off" />
+
+          <div id="form-error" class="hidden text-center text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3"></div>
+
+          <div class="flex justify-center pt-4">
+            <button type="submit" id="submit-btn" class="magnetic-btn group relative px-10 py-4 rounded-full bg-white text-void font-medium overflow-hidden disabled:opacity-60 disabled:cursor-not-allowed">
+              <span id="btn-text" class="relative z-10 flex items-center gap-2">
+                Send message
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="group-hover:translate-x-1 transition-transform"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </span>
+              <span id="btn-loading" class="relative z-10 hidden items-center gap-2">
+                <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" class="opacity-25"/><path d="M4 12a8 8 0 018-8" stroke="currentColor" stroke-width="3" stroke-linecap="round" class="opacity-75"/></svg>
+                Sending...
+              </span>
+              <span class="absolute inset-0 bg-gradient-to-r from-electric to-cyan opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+            </button>
+          </div>
+        </form>
+
+        <div id="form-success" class="hidden text-center py-12">
+          <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+          </div>
+          <h3 class="font-display text-2xl font-semibold mb-2">Message received</h3>
+          <p class="text-white/50">Thank you! I'll get back to you soon.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="relative py-16 border-t border-white/5">
+      <div class="container mx-auto px-6 lg:px-12">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+          <div class="flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full bg-electric"></span>
+            <span class="font-display font-semibold tracking-tight">SAMUEL SUCCESS — SAMSUC</span>
+          </div>
+          
+          <div class="flex items-center gap-6">
+            <a href="https://github.com/samsuc" class="social-icon text-white/40 hover:text-electric transition-colors" aria-label="GitHub">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/in/sam-suc" class="social-icon text-white/40 hover:text-electric transition-colors" aria-label="LinkedIn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            </a>
+            <a href="https://x.com/sam__suc" class="social-icon text-white/40 hover:text-electric transition-colors" aria-label="X">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="mailto:samsuc34@gmail.com" class="social-icon text-white/40 hover:text-electric transition-colors" aria-label="Email">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </a>
+          </div>
+
+          <p class="text-white/30 text-sm">© 2026 <span data-profile="displayName">Samuel Success</span>. Crafted with intention.</p>
+        </div>
+
+        <div class="mt-12 text-center">
+          <button id="back-to-top" class="magnetic-btn inline-flex items-center gap-2 text-sm text-white/40 hover:text-electric transition-colors">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+            Back to top
+          </button>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Command Palette -->
+  <div id="cmd-palette" class="fixed inset-0 z-[70] hidden items-start justify-center pt-[20vh] bg-void/80 backdrop-blur-md">
+    <div class="w-full max-w-xl mx-4 rounded-2xl border border-white/10 bg-navy/90 shadow-2xl overflow-hidden">
+      <div class="flex items-center gap-3 px-5 py-4 border-b border-white/10">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-white/40"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" id="cmd-input" class="flex-1 bg-transparent text-white placeholder-white/40 outline-none text-sm" placeholder="Type a command or search..." />
+        <kbd class="text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-white/40">ESC</kbd>
+      </div>
+      <div id="cmd-results" class="max-h-72 overflow-y-auto py-2">
+        <button class="cmd-item w-full text-left px-5 py-3 text-sm text-white/70 hover:bg-white/5 hover:text-white flex items-center gap-3" data-action="about">
+          <span class="text-white/30">01</span> Go to About
+        </button>
+        <button class="cmd-item w-full text-left px-5 py-3 text-sm text-white/70 hover:bg-white/5 hover:text-white flex items-center gap-3" data-action="projects">
+          <span class="text-white/30">02</span> View Projects
+        </button>
+        <button class="cmd-item w-full text-left px-5 py-3 text-sm text-white/70 hover:bg-white/5 hover:text-white flex items-center gap-3" data-action="vision">
+          <span class="text-white/30">03</span> Vision
+        </button>
+        <button class="cmd-item w-full text-left px-5 py-3 text-sm text-white/70 hover:bg-white/5 hover:text-white flex items-center gap-3" data-action="contact">
+          <span class="text-white/30">04</span> Contact
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/content-loader.js"></script>
+  <script src="js/profile-apply.js"></script>
+  <script src="js/nova.js"></script>
+  <script src="js/nova-rag.js"></script>
+</body>
+</html>

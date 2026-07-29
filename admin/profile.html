@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile Settings — SAMSUC Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{void:'#050505',electric:'#00D4FF',cyan:'#22D3EE'}}}}</script>
+  <style>
+    body{background:#050505;color:#fff;font-family:Inter,system-ui,sans-serif}
+    .glass{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)}
+    input,textarea{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:.75rem;padding:.65rem .9rem;width:100%;color:#fff}
+    input:focus,textarea:focus{outline:none;border-color:rgba(0,212,255,.5)}
+    label{font-size:.75rem;color:rgba(255,255,255,.45);display:block;margin-bottom:.35rem}
+  </style>
+</head>
+<body class="min-h-screen">
+  <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-void">
+    <div class="glass rounded-3xl p-8 w-full max-w-sm mx-4">
+      <h1 class="text-xl font-semibold text-center mb-6">Admin Login</h1>
+      <form id="login-form" class="space-y-3">
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <div id="login-error" class="hidden text-red-400 text-sm text-center"></div>
+        <button class="w-full py-3 rounded-xl bg-electric text-void font-medium">Sign in</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="app" class="hidden min-h-screen flex">
+    <aside class="hidden md:flex w-56 flex-col border-r border-white/5 p-4 gap-1">
+      <div class="flex items-center gap-2 px-2 py-3 mb-4"><span class="w-2 h-2 rounded-full bg-electric"></span><span class="font-semibold">SAMSUC</span></div>
+      <a href="dashboard.html" class="px-3 py-2 rounded-lg text-white/60 hover:bg-white/5 text-sm">Overview</a>
+      <a href="messages.html" class="px-3 py-2 rounded-lg text-white/60 hover:bg-white/5 text-sm">Messages</a>
+      <a href="content.html" class="px-3 py-2 rounded-lg text-white/60 hover:bg-white/5 text-sm">Projects & Skills</a>
+      <a href="profile.html" class="px-3 py-2 rounded-lg bg-electric/10 text-electric text-sm">Profile</a>
+      <button id="logout-btn" class="mt-auto px-3 py-2 text-white/40 hover:text-red-400 text-sm text-left">Logout</button>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto p-4 md:p-8 max-w-3xl">
+      <h1 class="text-xl font-semibold mb-2">Profile & site settings</h1>
+      <p class="text-white/40 text-sm mb-8">Change your name, photo, CV, and text — no coding needed. The live site updates after you save.</p>
+
+      <form id="profile-form" class="space-y-6">
+        <div class="glass rounded-2xl p-6 space-y-4">
+          <h2 class="font-medium text-white/80">Identity</h2>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div><label>Display name</label><input id="displayName" required /></div>
+            <div><label>Brand</label><input id="brand" /></div>
+          </div>
+          <div><label>Tagline</label><input id="tagline" /></div>
+          <div><label>Short tagline</label><input id="shortTagline" /></div>
+          <div><label>Hero quote</label><input id="heroQuote" /></div>
+        </div>
+
+        <div class="glass rounded-2xl p-6 space-y-4">
+          <h2 class="font-medium text-white/80">About</h2>
+          <div><label>About text</label><textarea id="about" rows="4"></textarea></div>
+          <div><label>Mission</label><input id="mission" /></div>
+          <div><label>Vision</label><textarea id="vision" rows="4"></textarea></div>
+        </div>
+
+        <div class="glass rounded-2xl p-6 space-y-4">
+          <h2 class="font-medium text-white/80">Contact & socials</h2>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div><label>Email</label><input id="emailField" type="email" /></div>
+            <div><label>Location</label><input id="location" /></div>
+          </div>
+          <div><label>Availability</label><input id="availability" /></div>
+          <div><label>GitHub URL</label><input id="github" /></div>
+          <div><label>LinkedIn URL</label><input id="linkedin" /></div>
+          <div><label>X (Twitter) URL</label><input id="x" /></div>
+        </div>
+
+        <div class="glass rounded-2xl p-6 space-y-4">
+          <h2 class="font-medium text-white/80">Portrait & CV</h2>
+          <div class="flex flex-wrap gap-6 items-start">
+            <div>
+              <label>Current portrait</label>
+              <img id="portrait-preview" src="" alt="" class="w-28 h-28 rounded-2xl object-cover border border-white/10 bg-white/5" />
+              <input type="file" id="portrait-file" accept="image/*" class="mt-2 text-xs block" />
+            </div>
+            <div class="flex-1 min-w-[200px]">
+              <label>Portrait URL</label>
+              <input id="portraitUrl" />
+              <label class="mt-4">CV URL</label>
+              <input id="cvUrl" />
+              <input type="file" id="cv-file" accept="application/pdf,.pdf" class="mt-2 text-xs block" />
+              <p class="text-[11px] text-white/30 mt-2">Upload a new photo or PDF, or paste a URL.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-3 items-center">
+          <button type="submit" class="px-6 py-3 rounded-full bg-electric text-void font-medium text-sm">Save changes</button>
+          <span id="save-status" class="text-sm text-white/40"></span>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <script>
+    const AUTH = '/api/auth';
+    const API = '/api/content';
+    let token = localStorage.getItem('samsuc_admin_token') || '';
+    const $ = (id) => document.getElementById(id);
+
+    function logout() {
+      token = '';
+      localStorage.removeItem('samsuc_admin_token');
+      $('login-screen').classList.remove('hidden');
+      $('app').classList.add('hidden');
+    }
+    $('logout-btn').onclick = logout;
+
+    $('login-form').onsubmit = async (e) => {
+      e.preventDefault();
+      try {
+        const res = await fetch(AUTH + '/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: $('email').value.trim(), password: $('password').value }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Login failed');
+        token = data.token;
+        localStorage.setItem('samsuc_admin_token', token);
+        $('login-screen').classList.add('hidden');
+        $('app').classList.remove('hidden');
+        loadProfile();
+      } catch (ex) {
+        $('login-error').textContent = ex.message;
+        $('login-error').classList.remove('hidden');
+      }
+    };
+
+    async function loadProfile() {
+      const res = await fetch(API + '/profile');
+      const data = await res.json();
+      const p = data.profile || {};
+      $('displayName').value = p.displayName || '';
+      $('brand').value = p.brand || '';
+      $('tagline').value = p.tagline || '';
+      $('shortTagline').value = p.shortTagline || '';
+      $('heroQuote').value = p.heroQuote || '';
+      $('about').value = p.about || '';
+      $('mission').value = p.mission || '';
+      $('vision').value = p.vision || '';
+      $('emailField').value = p.email || '';
+      $('location').value = p.location || '';
+      $('availability').value = p.availability || '';
+      $('github').value = p.github || '';
+      $('linkedin').value = p.linkedin || '';
+      $('x').value = p.x || '';
+      $('portraitUrl').value = p.portraitUrl || '';
+      $('cvUrl').value = p.cvUrl || '';
+      $('portrait-preview').src = p.portraitUrl || '';
+    }
+
+    async function upload(kind, fileInput) {
+      if (!fileInput.files || !fileInput.files[0]) return null;
+      const fd = new FormData();
+      fd.append('file', fileInput.files[0]);
+      const res = await fetch(API + '/profile/' + kind, {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + token },
+        body: fd,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Upload failed');
+      return data.url;
+    }
+
+    $('profile-form').onsubmit = async (e) => {
+      e.preventDefault();
+      const status = $('save-status');
+      status.textContent = 'Saving…';
+      try {
+        if ($('portrait-file').files[0]) {
+          const url = await upload('portrait', $('portrait-file'));
+          if (url) $('portraitUrl').value = url;
+        }
+        if ($('cv-file').files[0]) {
+          const url = await upload('cv', $('cv-file'));
+          if (url) $('cvUrl').value = url;
+        }
+        const body = {
+          displayName: $('displayName').value.trim(),
+          brand: $('brand').value.trim(),
+          tagline: $('tagline').value.trim(),
+          shortTagline: $('shortTagline').value.trim(),
+          heroQuote: $('heroQuote').value.trim(),
+          about: $('about').value.trim(),
+          mission: $('mission').value.trim(),
+          vision: $('vision').value.trim(),
+          email: $('emailField').value.trim(),
+          location: $('location').value.trim(),
+          availability: $('availability').value.trim(),
+          github: $('github').value.trim(),
+          linkedin: $('linkedin').value.trim(),
+          x: $('x').value.trim(),
+          portraitUrl: $('portraitUrl').value.trim(),
+          cvUrl: $('cvUrl').value.trim(),
+        };
+        const res = await fetch(API + '/profile', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Save failed');
+        $('portrait-preview').src = data.profile.portraitUrl || '';
+        status.textContent = 'Saved ✓ — refresh the public site to see changes.';
+        status.className = 'text-sm text-emerald-400';
+      } catch (ex) {
+        status.textContent = ex.message;
+        status.className = 'text-sm text-red-400';
+      }
+    };
+
+    if (token) {
+      $('login-screen').classList.add('hidden');
+      $('app').classList.remove('hidden');
+      loadProfile();
+    }
+  </script>
+</body>
+</html>

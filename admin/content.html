@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects & Skills — SAMSUC Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{void:'#050505',navy:'#08111F',electric:'#00D4FF',cyan:'#22D3EE',softpurple:'#A78BFA'}}}}</script>
+  <style>
+    body{background:#050505;color:#fff;font-family:Inter,system-ui,sans-serif}
+    .glass{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08)}
+    input,textarea,select{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:.75rem;padding:.6rem .9rem;width:100%;color:#fff}
+    input:focus,textarea:focus,select:focus{outline:none;border-color:rgba(0,212,255,.5)}
+    label{font-size:.75rem;color:rgba(255,255,255,.45);display:block;margin-bottom:.35rem}
+  </style>
+</head>
+<body class="min-h-screen">
+  <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-void">
+    <div class="glass rounded-3xl p-8 w-full max-w-sm mx-4">
+      <h1 class="text-xl font-semibold text-center mb-6">Admin Login</h1>
+      <form id="login-form" class="space-y-3">
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <div id="login-error" class="hidden text-red-400 text-sm text-center"></div>
+        <button class="w-full py-3 rounded-xl bg-electric text-void font-medium">Sign in</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="app" class="hidden min-h-screen flex">
+    <aside class="hidden md:flex w-56 flex-col border-r border-white/5 p-4 gap-1">
+      <div class="flex items-center gap-2 px-2 py-3 mb-4"><span class="w-2 h-2 rounded-full bg-electric"></span><span class="font-semibold">SAMSUC</span></div>
+      <a href="dashboard.html" class="px-3 py-2 rounded-lg text-white/60 hover:bg-white/5 text-sm">Overview</a>
+      <a href="messages.html" class="px-3 py-2 rounded-lg text-white/60 hover:bg-white/5 text-sm">Messages</a>
+      <a href="content.html" class="px-3 py-2 rounded-lg bg-electric/10 text-electric text-sm">Projects & Skills</a>
+      <a href="profile.html" class="px-3 py-2 rounded-lg text-white/60 hover:bg-white/5 text-sm">Profile</a>
+      <button id="logout-btn" class="mt-auto px-3 py-2 text-white/40 hover:text-red-400 text-sm text-left">Logout</button>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto p-4 md:p-8">
+      <div class="flex flex-wrap gap-2 mb-6">
+        <button data-tab="projects" class="tab active px-4 py-2 rounded-full text-sm bg-white/10">Projects</button>
+        <button data-tab="skills" class="tab px-4 py-2 rounded-full text-sm text-white/50 hover:bg-white/5">Skills</button>
+        <button data-tab="testimonials" class="tab px-4 py-2 rounded-full text-sm text-white/50 hover:bg-white/5">Testimonials</button>
+        <button data-tab="blog" class="tab px-4 py-2 rounded-full text-sm text-white/50 hover:bg-white/5">Blog</button>
+        <a href="dashboard.html" class="md:hidden ml-auto text-sm text-electric">Dashboard</a>
+      </div>
+
+      <!-- PROJECTS -->
+      <section id="tab-projects">
+        <div class="flex items-center justify-between mb-4">
+          <h1 class="text-xl font-semibold">Projects</h1>
+          <button id="btn-new-project" class="px-4 py-2 rounded-full bg-electric text-void text-sm font-medium">+ Add project</button>
+        </div>
+        <div id="project-list" class="space-y-3 mb-8"></div>
+
+        <div id="project-form-wrap" class="hidden glass rounded-2xl p-6 max-w-2xl">
+          <h2 class="font-medium mb-4" id="project-form-title">New project</h2>
+          <form id="project-form" class="space-y-4">
+            <input type="hidden" id="p-id" />
+            <div><label>Title</label><input id="p-title" required /></div>
+            <div><label>Description</label><textarea id="p-desc" rows="3"></textarea></div>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div><label>Category</label>
+                <select id="p-category"><option value="web">Web</option><option value="product">Product</option><option value="experiment">Experiment</option><option value="other">Other</option></select>
+              </div>
+              <div><label>Tech (comma-separated)</label><input id="p-tech" placeholder="React, GSAP, Three.js" /></div>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div><label>GitHub URL</label><input id="p-github" type="url" /></div>
+              <div><label>Live demo URL</label><input id="p-live" type="url" /></div>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div><label>Image URL or upload</label><input id="p-image" placeholder="/uploads/..." />
+                <input type="file" id="p-image-file" accept="image/*" class="mt-2 text-xs" /></div>
+              <div><label>Video URL or upload</label><input id="p-video" placeholder="/uploads/..." />
+                <input type="file" id="p-video-file" accept="video/*" class="mt-2 text-xs" /></div>
+            </div>
+            <label class="flex items-center gap-2 text-sm text-white/70"><input type="checkbox" id="p-featured" class="w-auto" /> Featured</label>
+            <div class="flex gap-2">
+              <button type="submit" class="px-5 py-2 rounded-full bg-electric text-void text-sm font-medium">Save</button>
+              <button type="button" id="p-cancel" class="px-5 py-2 rounded-full border border-white/10 text-sm">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- SKILLS -->
+      <section id="tab-skills" class="hidden">
+        <div class="flex items-center justify-between mb-4">
+          <h1 class="text-xl font-semibold">Skills</h1>
+          <button id="btn-new-skill" class="px-4 py-2 rounded-full bg-electric text-void text-sm font-medium">+ Add skill</button>
+        </div>
+        <div id="skill-list" class="space-y-3 mb-8"></div>
+
+        <div id="skill-form-wrap" class="hidden glass rounded-2xl p-6 max-w-2xl">
+          <h2 class="font-medium mb-4" id="skill-form-title">New skill</h2>
+          <form id="skill-form" class="space-y-4">
+            <input type="hidden" id="s-id" />
+            <div><label>Name</label><input id="s-name" required /></div>
+            <div><label>Category</label><input id="s-category" placeholder="Frontend, UI/UX, Motion..." /></div>
+            <div><label>Description</label><textarea id="s-desc" rows="2"></textarea></div>
+            <div><label>Tags (comma-separated)</label><input id="s-tags" placeholder="HTML, CSS, JS" /></div>
+            <div><label>Icon URL or upload</label><input id="s-icon" placeholder="/uploads/..." />
+              <input type="file" id="s-icon-file" accept="image/*" class="mt-2 text-xs" /></div>
+            <div class="flex gap-2">
+              <button type="submit" class="px-5 py-2 rounded-full bg-electric text-void text-sm font-medium">Save</button>
+              <button type="button" id="s-cancel" class="px-5 py-2 rounded-full border border-white/10 text-sm">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- TESTIMONIALS -->
+      <section id="tab-testimonials" class="hidden">
+        <div class="flex items-center justify-between mb-4">
+          <h1 class="text-xl font-semibold">Testimonials</h1>
+          <button id="btn-new-testimonial" class="px-4 py-2 rounded-full bg-electric text-void text-sm font-medium">+ Add</button>
+        </div>
+        <div id="testimonial-list" class="space-y-3 mb-8"></div>
+        <div id="testimonial-form-wrap" class="hidden glass rounded-2xl p-6 max-w-2xl">
+          <h2 class="font-medium mb-4" id="t-form-title">New testimonial</h2>
+          <form id="testimonial-form" class="space-y-4">
+            <input type="hidden" id="t-id" />
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div><label>Name</label><input id="t-name" required /></div>
+              <div><label>Role</label><input id="t-role" /></div>
+            </div>
+            <div><label>Company</label><input id="t-company" /></div>
+            <div><label>Quote</label><textarea id="t-quote" rows="4" required></textarea></div>
+            <div><label>Avatar URL</label><input id="t-avatar" /><input type="file" id="t-avatar-file" accept="image/*" class="mt-2 text-xs" /></div>
+            <div><label>Status</label>
+              <select id="t-status">
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+            <div class="flex gap-2">
+              <button type="submit" class="px-5 py-2 rounded-full bg-electric text-void text-sm font-medium">Save</button>
+              <button type="button" id="t-cancel" class="px-5 py-2 rounded-full border border-white/10 text-sm">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- BLOG -->
+      <section id="tab-blog" class="hidden">
+        <div class="flex items-center justify-between mb-4">
+          <h1 class="text-xl font-semibold">Blog</h1>
+          <button id="btn-new-post" class="px-4 py-2 rounded-full bg-electric text-void text-sm font-medium">+ New post</button>
+        </div>
+        <div id="post-list" class="space-y-3 mb-8"></div>
+        <div id="post-form-wrap" class="hidden glass rounded-2xl p-6 max-w-3xl">
+          <h2 class="font-medium mb-4" id="post-form-title">New post</h2>
+          <form id="post-form" class="space-y-4">
+            <input type="hidden" id="post-id" />
+            <div><label>Title</label><input id="post-title" required /></div>
+            <div><label>Slug</label><input id="post-slug" placeholder="auto-from-title" /></div>
+            <div><label>Excerpt</label><textarea id="post-excerpt" rows="2"></textarea></div>
+            <div><label>Content</label><textarea id="post-content" rows="10" placeholder="Write your article..."></textarea></div>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div><label>Cover image URL</label><input id="post-cover" /><input type="file" id="post-cover-file" accept="image/*" class="mt-2 text-xs" /></div>
+              <div><label>Tags (comma-separated)</label><input id="post-tags" /></div>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div><label>Status</label>
+                <select id="post-status">
+                  <option value="draft">Draft</option>
+                  <option value="published">Published</option>
+                  <option value="scheduled">Scheduled</option>
+                </select>
+              </div>
+              <div><label>Schedule (if scheduled)</label><input type="datetime-local" id="post-scheduled" /></div>
+            </div>
+            <div class="flex gap-2">
+              <button type="submit" class="px-5 py-2 rounded-full bg-electric text-void text-sm font-medium">Save</button>
+              <button type="button" id="post-cancel" class="px-5 py-2 rounded-full border border-white/10 text-sm">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    const AUTH = '/api/auth';
+    const API = '/api/content';
+    let token = localStorage.getItem('samsuc_admin_token') || '';
+    const $ = (id) => document.getElementById(id);
+
+    async function api(path, opts = {}) {
+      const res = await fetch(API + path, {
+        ...opts,
+        headers: {
+          ...(opts.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
+          Authorization: token ? 'Bearer ' + token : '',
+          ...(opts.headers || {}),
+        },
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 401) { logout(); throw new Error('Unauthorized'); }
+      if (!res.ok) throw new Error(data.message || 'Request failed');
+      return data;
+    }
+
+    function logout() {
+      token = '';
+      localStorage.removeItem('samsuc_admin_token');
+      $('login-screen').classList.remove('hidden');
+      $('app').classList.add('hidden');
+    }
+    $('logout-btn').onclick = logout;
+
+    $('login-form').onsubmit = async (e) => {
+      e.preventDefault();
+      try {
+        const res = await fetch(AUTH + '/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: $('email').value.trim(), password: $('password').value }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Login failed');
+        token = data.token;
+        localStorage.setItem('samsuc_admin_token', token);
+        $('login-screen').classList.add('hidden');
+        $('app').classList.remove('hidden');
+        loadProjects();
+        loadSkills();
+        loadTestimonials();
+        loadPosts();
+      } catch (ex) {
+        $('login-error').textContent = ex.message;
+        $('login-error').classList.remove('hidden');
+      }
+    };
+
+    document.querySelectorAll('.tab').forEach((btn) => {
+      btn.onclick = () => {
+        document.querySelectorAll('.tab').forEach((b) => { b.classList.remove('active','bg-white/10'); b.classList.add('text-white/50'); });
+        btn.classList.add('active','bg-white/10'); btn.classList.remove('text-white/50');
+        $('tab-projects').classList.toggle('hidden', btn.dataset.tab !== 'projects');
+        $('tab-skills').classList.toggle('hidden', btn.dataset.tab !== 'skills');
+        $('tab-testimonials').classList.toggle('hidden', btn.dataset.tab !== 'testimonials');
+        $('tab-blog').classList.toggle('hidden', btn.dataset.tab !== 'blog');
+      };
+    });
+
+    async function uploadFile(fileInput) {
+      if (!fileInput.files || !fileInput.files[0]) return null;
+      const fd = new FormData();
+      fd.append('file', fileInput.files[0]);
+      const res = await fetch(API + '/upload', {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + token },
+        body: fd,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Upload failed');
+      return data.url;
+    }
+
+    /* Projects */
+    async function loadProjects() {
+      const data = await api('/projects');
+      const list = data.projects || [];
+      $('project-list').innerHTML = list.length ? list.map((p) => `
+        <div class="glass rounded-xl p-4 flex flex-wrap items-start justify-between gap-3">
+          <div class="min-w-0">
+            <div class="font-medium">${esc(p.title)} ${p.featured ? '<span class="text-electric text-xs">★</span>' : ''}</div>
+            <div class="text-xs text-white/40 mt-1">${esc(p.category)} · ${(p.tech||[]).join(', ')}</div>
+            <div class="text-sm text-white/50 mt-1 line-clamp-2">${esc(p.description)}</div>
+          </div>
+          <div class="flex gap-2 shrink-0">
+            <button data-edit="${p.id}" class="text-xs px-3 py-1 rounded-lg border border-white/10 hover:bg-white/5">Edit</button>
+            <button data-del="${p.id}" class="text-xs px-3 py-1 rounded-lg border border-red-500/30 text-red-400">Delete</button>
+          </div>
+        </div>`).join('') : '<p class="text-white/30 text-sm">No projects yet</p>';
+
+      $('project-list').querySelectorAll('[data-edit]').forEach((b) => b.onclick = () => editProject(b.dataset.edit, list));
+      $('project-list').querySelectorAll('[data-del]').forEach((b) => b.onclick = async () => {
+        if (!confirm('Delete project?')) return;
+        await api('/projects/' + b.dataset.del, { method: 'DELETE' });
+        loadProjects();
+      });
+    }
+
+    function editProject(id, list) {
+      const p = list.find((x) => x.id === id);
+      if (!p) return;
+      $('project-form-title').textContent = 'Edit project';
+      $('p-id').value = p.id;
+      $('p-title').value = p.title || '';
+      $('p-desc').value = p.description || '';
+      $('p-category').value = p.category || 'web';
+      $('p-tech').value = (p.tech || []).join(', ');
+      $('p-github').value = p.github || '';
+      $('p-live').value = p.live || '';
+      $('p-image').value = p.image || '';
+      $('p-video').value = p.video || '';
+      $('p-featured').checked = !!p.featured;
+      $('project-form-wrap').classList.remove('hidden');
+    }
+
+    $('btn-new-project').onclick = () => {
+      $('project-form-title').textContent = 'New project';
+      $('project-form').reset();
+      $('p-id').value = '';
+      $('project-form-wrap').classList.remove('hidden');
+    };
+    $('p-cancel').onclick = () => $('project-form-wrap').classList.add('hidden');
+
+    $('project-form').onsubmit = async (e) => {
+      e.preventDefault();
+      try {
+        if ($('p-image-file').files[0]) $('p-image').value = await uploadFile($('p-image-file')) || $('p-image').value;
+        if ($('p-video-file').files[0]) $('p-video').value = await uploadFile($('p-video-file')) || $('p-video').value;
+        const body = {
+          title: $('p-title').value.trim(),
+          description: $('p-desc').value.trim(),
+          category: $('p-category').value,
+          tech: $('p-tech').value,
+          github: $('p-github').value.trim() || null,
+          live: $('p-live').value.trim() || null,
+          image: $('p-image').value.trim() || null,
+          video: $('p-video').value.trim() || null,
+          featured: $('p-featured').checked,
+        };
+        const id = $('p-id').value;
+        if (id) await api('/projects/' + id, { method: 'PATCH', body: JSON.stringify(body) });
+        else await api('/projects', { method: 'POST', body: JSON.stringify(body) });
+        $('project-form-wrap').classList.add('hidden');
+        loadProjects();
+      } catch (ex) { alert(ex.message); }
+    };
+
+    /* Skills */
+    async function loadSkills() {
+      const data = await api('/skills');
+      const list = data.skills || [];
+      $('skill-list').innerHTML = list.length ? list.map((s) => `
+        <div class="glass rounded-xl p-4 flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <div class="font-medium">${esc(s.name)}</div>
+            <div class="text-xs text-white/40 mt-1">${esc(s.category)} · ${(s.tags||[]).join(', ')}</div>
+            <div class="text-sm text-white/50 mt-1">${esc(s.description)}</div>
+          </div>
+          <div class="flex gap-2">
+            <button data-sedit="${s.id}" class="text-xs px-3 py-1 rounded-lg border border-white/10">Edit</button>
+            <button data-sdel="${s.id}" class="text-xs px-3 py-1 rounded-lg border border-red-500/30 text-red-400">Delete</button>
+          </div>
+        </div>`).join('') : '<p class="text-white/30 text-sm">No skills yet</p>';
+
+      $('skill-list').querySelectorAll('[data-sedit]').forEach((b) => b.onclick = () => {
+        const s = list.find((x) => x.id === b.dataset.sedit);
+        if (!s) return;
+        $('skill-form-title').textContent = 'Edit skill';
+        $('s-id').value = s.id;
+        $('s-name').value = s.name || '';
+        $('s-category').value = s.category || '';
+        $('s-desc').value = s.description || '';
+        $('s-tags').value = (s.tags || []).join(', ');
+        $('s-icon').value = s.icon || '';
+        $('skill-form-wrap').classList.remove('hidden');
+      });
+      $('skill-list').querySelectorAll('[data-sdel]').forEach((b) => b.onclick = async () => {
+        if (!confirm('Delete skill?')) return;
+        await api('/skills/' + b.dataset.sdel, { method: 'DELETE' });
+        loadSkills();
+      });
+    }
+
+    $('btn-new-skill').onclick = () => {
+      $('skill-form-title').textContent = 'New skill';
+      $('skill-form').reset();
+      $('s-id').value = '';
+      $('skill-form-wrap').classList.remove('hidden');
+    };
+    $('s-cancel').onclick = () => $('skill-form-wrap').classList.add('hidden');
+
+    $('skill-form').onsubmit = async (e) => {
+      e.preventDefault();
+      try {
+        if ($('s-icon-file').files[0]) $('s-icon').value = await uploadFile($('s-icon-file')) || $('s-icon').value;
+        const body = {
+          name: $('s-name').value.trim(),
+          category: $('s-category').value.trim(),
+          description: $('s-desc').value.trim(),
+          tags: $('s-tags').value,
+          icon: $('s-icon').value.trim() || null,
+        };
+        const id = $('s-id').value;
+        if (id) await api('/skills/' + id, { method: 'PATCH', body: JSON.stringify(body) });
+        else await api('/skills', { method: 'POST', body: JSON.stringify(body) });
+        $('skill-form-wrap').classList.add('hidden');
+        loadSkills();
+      } catch (ex) { alert(ex.message); }
+    };
+
+
+    /* Testimonials */
+    async function loadTestimonials() {
+      const data = await api('/testimonials');
+      const list = data.testimonials || [];
+      $('testimonial-list').innerHTML = list.length ? list.map((t) => `
+        <div class="glass rounded-xl p-4 flex flex-wrap justify-between gap-3">
+          <div class="min-w-0">
+            <div class="font-medium">${esc(t.name)} <span class="text-xs text-white/40">· ${esc(t.status)}</span></div>
+            <div class="text-xs text-white/40">${esc(t.role)}${t.company ? ' @ ' + esc(t.company) : ''}</div>
+            <div class="text-sm text-white/60 mt-1 line-clamp-2">"${esc(t.quote)}"</div>
+          </div>
+          <div class="flex gap-2 shrink-0">
+            <button data-tedit="${t.id}" class="text-xs px-3 py-1 rounded-lg border border-white/10">Edit</button>
+            <button data-tapprove="${t.id}" class="text-xs px-3 py-1 rounded-lg border border-emerald-500/30 text-emerald-400">Approve</button>
+            <button data-treject="${t.id}" class="text-xs px-3 py-1 rounded-lg border border-white/10">Reject</button>
+            <button data-tdel="${t.id}" class="text-xs px-3 py-1 rounded-lg border border-red-500/30 text-red-400">Delete</button>
+          </div>
+        </div>`).join('') : '<p class="text-white/30 text-sm">No testimonials yet</p>';
+
+      list.forEach((t) => {
+        const editBtn = document.querySelector(`[data-tedit="${t.id}"]`);
+        if (editBtn) editBtn.onclick = () => {
+          $('t-form-title').textContent = 'Edit testimonial';
+          $('t-id').value = t.id;
+          $('t-name').value = t.name || '';
+          $('t-role').value = t.role || '';
+          $('t-company').value = t.company || '';
+          $('t-quote').value = t.quote || '';
+          $('t-avatar').value = t.avatar || '';
+          $('t-status').value = t.status || 'pending';
+          $('testimonial-form-wrap').classList.remove('hidden');
+        };
+      });
+      document.querySelectorAll('[data-tapprove]').forEach((b) => b.onclick = async () => {
+        await api('/testimonials/' + b.dataset.tapprove, { method: 'PATCH', body: JSON.stringify({ status: 'approved' }) });
+        loadTestimonials();
+      });
+      document.querySelectorAll('[data-treject]').forEach((b) => b.onclick = async () => {
+        await api('/testimonials/' + b.dataset.treject, { method: 'PATCH', body: JSON.stringify({ status: 'rejected' }) });
+        loadTestimonials();
+      });
+      document.querySelectorAll('[data-tdel]').forEach((b) => b.onclick = async () => {
+        if (!confirm('Delete?')) return;
+        await api('/testimonials/' + b.dataset.tdel, { method: 'DELETE' });
+        loadTestimonials();
+      });
+    }
+
+    $('btn-new-testimonial').onclick = () => {
+      $('t-form-title').textContent = 'New testimonial';
+      $('testimonial-form').reset();
+      $('t-id').value = '';
+      $('testimonial-form-wrap').classList.remove('hidden');
+    };
+    $('t-cancel').onclick = () => $('testimonial-form-wrap').classList.add('hidden');
+    $('testimonial-form').onsubmit = async (e) => {
+      e.preventDefault();
+      try {
+        if ($('t-avatar-file').files[0]) $('t-avatar').value = await uploadFile($('t-avatar-file')) || $('t-avatar').value;
+        const body = {
+          name: $('t-name').value.trim(),
+          role: $('t-role').value.trim(),
+          company: $('t-company').value.trim(),
+          quote: $('t-quote').value.trim(),
+          avatar: $('t-avatar').value.trim() || null,
+          status: $('t-status').value,
+        };
+        const id = $('t-id').value;
+        if (id) await api('/testimonials/' + id, { method: 'PATCH', body: JSON.stringify(body) });
+        else await api('/testimonials', { method: 'POST', body: JSON.stringify(body) });
+        $('testimonial-form-wrap').classList.add('hidden');
+        loadTestimonials();
+      } catch (ex) { alert(ex.message); }
+    };
+
+    /* Blog */
+    async function loadPosts() {
+      const data = await api('/posts');
+      const list = data.posts || [];
+      $('post-list').innerHTML = list.length ? list.map((p) => `
+        <div class="glass rounded-xl p-4 flex flex-wrap justify-between gap-3">
+          <div class="min-w-0">
+            <div class="font-medium">${esc(p.title)} <span class="text-xs text-white/40">· ${esc(p.status)}</span></div>
+            <div class="text-xs text-white/40">/${esc(p.slug)} · ${(p.tags||[]).join(', ')}</div>
+            <div class="text-sm text-white/50 mt-1 line-clamp-2">${esc(p.excerpt || p.content?.slice(0,120))}</div>
+          </div>
+          <div class="flex gap-2 shrink-0">
+            <button data-pedit="${p.id}" class="text-xs px-3 py-1 rounded-lg border border-white/10">Edit</button>
+            <button data-ppub="${p.id}" class="text-xs px-3 py-1 rounded-lg border border-emerald-500/30 text-emerald-400">Publish</button>
+            <button data-pdel="${p.id}" class="text-xs px-3 py-1 rounded-lg border border-red-500/30 text-red-400">Delete</button>
+          </div>
+        </div>`).join('') : '<p class="text-white/30 text-sm">No posts yet</p>';
+
+      list.forEach((post) => {
+        const btn = document.querySelector(`[data-pedit="${post.id}"]`);
+        if (btn) btn.onclick = () => {
+          $('post-form-title').textContent = 'Edit post';
+          $('post-id').value = post.id;
+          $('post-title').value = post.title || '';
+          $('post-slug').value = post.slug || '';
+          $('post-excerpt').value = post.excerpt || '';
+          $('post-content').value = post.content || '';
+          $('post-cover').value = post.coverImage || '';
+          $('post-tags').value = (post.tags || []).join(', ');
+          $('post-status').value = post.status || 'draft';
+          if (post.scheduledAt) {
+            try { $('post-scheduled').value = post.scheduledAt.slice(0, 16); } catch {}
+          }
+          $('post-form-wrap').classList.remove('hidden');
+        };
+      });
+      document.querySelectorAll('[data-ppub]').forEach((b) => b.onclick = async () => {
+        await api('/posts/' + b.dataset.ppub, { method: 'PATCH', body: JSON.stringify({ status: 'published' }) });
+        loadPosts();
+      });
+      document.querySelectorAll('[data-pdel]').forEach((b) => b.onclick = async () => {
+        if (!confirm('Delete post?')) return;
+        await api('/posts/' + b.dataset.pdel, { method: 'DELETE' });
+        loadPosts();
+      });
+    }
+
+    $('btn-new-post').onclick = () => {
+      $('post-form-title').textContent = 'New post';
+      $('post-form').reset();
+      $('post-id').value = '';
+      $('post-form-wrap').classList.remove('hidden');
+    };
+    $('post-cancel').onclick = () => $('post-form-wrap').classList.add('hidden');
+    $('post-form').onsubmit = async (e) => {
+      e.preventDefault();
+      try {
+        if ($('post-cover-file').files[0]) $('post-cover').value = await uploadFile($('post-cover-file')) || $('post-cover').value;
+        const body = {
+          title: $('post-title').value.trim(),
+          slug: $('post-slug').value.trim() || undefined,
+          excerpt: $('post-excerpt').value.trim(),
+          content: $('post-content').value,
+          coverImage: $('post-cover').value.trim() || null,
+          tags: $('post-tags').value,
+          status: $('post-status').value,
+          scheduledAt: $('post-scheduled').value ? new Date($('post-scheduled').value).toISOString() : null,
+        };
+        const id = $('post-id').value;
+        if (id) await api('/posts/' + id, { method: 'PATCH', body: JSON.stringify(body) });
+        else await api('/posts', { method: 'POST', body: JSON.stringify(body) });
+        $('post-form-wrap').classList.add('hidden');
+        loadPosts();
+      } catch (ex) { alert(ex.message); }
+    };
+
+    function esc(s) {
+      return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    if (token) {
+      $('login-screen').classList.add('hidden');
+      $('app').classList.remove('hidden');
+      loadProjects();
+      loadSkills();
+      loadTestimonials();
+      loadPosts();
+    }
+  </script>
+</body>
+</html>

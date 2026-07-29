@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inbox — SAMSUC Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            void: '#050505',
+            navy: '#08111F',
+            electric: '#00D4FF',
+            cyan: '#22D3EE',
+            softpurple: '#A78BFA',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #050505; color: #fff; font-family: Inter, system-ui, sans-serif; }
+    .glass { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(12px); }
+    .msg-item:hover { background: rgba(0,212,255,0.06); }
+    .msg-item.active { background: rgba(0,212,255,0.1); border-color: rgba(0,212,255,0.3); }
+    .unread .name { font-weight: 600; color: #fff; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Login -->
+  <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-void">
+    <div class="glass rounded-3xl p-8 w-full max-w-sm mx-4">
+      <div class="text-center mb-8">
+        <div class="text-electric text-xs tracking-[0.3em] uppercase mb-2">SAMSUC</div>
+        <h1 class="text-2xl font-semibold">Admin Inbox</h1>
+        <p class="text-white/40 text-sm mt-2">Enter your password to continue</p>
+      </div>
+      <form id="login-form" class="space-y-4">
+        <input type="email" id="email" placeholder="Email" required autocomplete="username"
+          class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-electric/50" />
+        <input type="password" id="password" placeholder="Password" required autocomplete="current-password"
+          class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-electric/50" />
+        <div id="login-error" class="hidden text-red-400 text-sm text-center"></div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-electric text-void font-medium hover:bg-cyan transition-colors">
+          Sign in
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="app" class="hidden min-h-screen flex flex-col">
+    <header class="border-b border-white/5 px-4 md:px-6 py-4 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <span class="w-2 h-2 rounded-full bg-electric"></span>
+        <span class="font-semibold tracking-tight">SAMSUC Inbox</span>
+        <span id="unread-badge" class="hidden text-xs px-2 py-0.5 rounded-full bg-electric/20 text-electric"></span>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="dashboard.html" class="text-sm text-white/50 hover:text-electric">Dashboard</a>
+        <a href="content.html" class="text-sm text-white/50 hover:text-electric">Content</a>
+        <button id="refresh-btn" class="text-sm text-white/50 hover:text-white">Refresh</button>
+        <button id="logout-btn" class="text-sm text-white/50 hover:text-red-400">Logout</button>
+      </div>
+    </header>
+
+    <div class="flex-1 flex flex-col md:flex-row min-h-0">
+      <!-- Sidebar list -->
+      <aside class="w-full md:w-96 border-r border-white/5 flex flex-col max-h-[45vh] md:max-h-none">
+        <div class="p-3 border-b border-white/5 space-y-2">
+          <input id="search" type="search" placeholder="Search messages..."
+            class="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm focus:outline-none focus:border-electric/40" />
+          <div class="flex gap-1 text-xs flex-wrap">
+            <button data-filter="all" class="filter-btn active px-2.5 py-1 rounded-full bg-white/10">All</button>
+            <button data-filter="unread" class="filter-btn px-2.5 py-1 rounded-full text-white/50 hover:bg-white/5">Unread</button>
+            <button data-filter="starred" class="filter-btn px-2.5 py-1 rounded-full text-white/50 hover:bg-white/5">Starred</button>
+            <button data-filter="archived" class="filter-btn px-2.5 py-1 rounded-full text-white/50 hover:bg-white/5">Archived</button>
+          </div>
+        </div>
+        <div id="msg-list" class="flex-1 overflow-y-auto"></div>
+      </aside>
+
+      <!-- Detail -->
+      <main class="flex-1 flex flex-col min-h-0">
+        <div id="empty-state" class="flex-1 flex items-center justify-center text-white/30 text-sm">
+          Select a message
+        </div>
+        <div id="detail" class="hidden flex-1 flex flex-col overflow-hidden">
+          <div class="p-4 md:p-6 border-b border-white/5 flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 id="d-subject" class="text-xl font-semibold"></h2>
+              <p class="text-white/50 text-sm mt-1">
+                <span id="d-name"></span> · <a id="d-email" class="text-electric hover:underline"></a>
+              </p>
+              <p id="d-meta" class="text-white/30 text-xs mt-1"></p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button id="btn-star" class="px-3 py-1.5 rounded-lg text-sm border border-white/10 hover:bg-white/5">★ Star</button>
+              <button id="btn-read" class="px-3 py-1.5 rounded-lg text-sm border border-white/10 hover:bg-white/5">Mark unread</button>
+              <button id="btn-archive" class="px-3 py-1.5 rounded-lg text-sm border border-white/10 hover:bg-white/5">Archive</button>
+              <button id="btn-delete" class="px-3 py-1.5 rounded-lg text-sm border border-red-500/30 text-red-400 hover:bg-red-500/10">Delete</button>
+            </div>
+          </div>
+          <div class="flex-1 overflow-y-auto p-4 md:p-6">
+            <pre id="d-body" class="whitespace-pre-wrap text-white/80 leading-relaxed font-sans text-sm"></pre>
+            <div id="d-tech" class="mt-8 pt-6 border-t border-white/5 text-xs text-white/30 space-y-1"></div>
+          </div>
+          <div class="p-4 border-t border-white/5">
+            <a id="d-reply" href="#" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-electric text-void font-medium text-sm hover:bg-cyan transition-colors">
+              Reply via email
+            </a>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const API = '/api/admin';
+    const AUTH = '/api/auth';
+    let token = localStorage.getItem('samsuc_admin_token') || '';
+    let messages = [];
+    let currentId = null;
+    let filter = 'all';
+
+    const $ = (id) => document.getElementById(id);
+
+    async function api(path, opts = {}) {
+      const res = await fetch(API + path, {
+        ...opts,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token ? `Bearer ${token}` : '',
+          ...(opts.headers || {}),
+        },
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 401) {
+        logout();
+        throw new Error('Unauthorized');
+      }
+      if (!res.ok) throw new Error(data.message || 'Request failed');
+      return data;
+    }
+
+    function logout() {
+      fetch(AUTH + '/logout', { method: 'POST', headers: { Authorization: token ? 'Bearer ' + token : '' } }).catch(() => {});
+      token = '';
+      localStorage.removeItem('samsuc_admin_token');
+      localStorage.removeItem('samsuc_admin_user');
+      $('login-screen').classList.remove('hidden');
+      $('app').classList.add('hidden');
+    }
+
+    function showApp() {
+      $('login-screen').classList.add('hidden');
+      $('app').classList.remove('hidden');
+      loadMessages();
+    }
+
+    $('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const err = $('login-error');
+      err.classList.add('hidden');
+      try {
+        const res = await fetch(AUTH + '/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: $('email').value.trim(),
+            password: $('password').value,
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.message || 'Login failed');
+        token = data.token;
+        localStorage.setItem('samsuc_admin_token', token);
+        if (data.user) localStorage.setItem('samsuc_admin_user', JSON.stringify(data.user));
+        showApp();
+      } catch (ex) {
+        err.textContent = ex.message || 'Login failed';
+        err.classList.remove('hidden');
+      }
+    });
+
+    $('logout-btn').addEventListener('click', logout);
+    $('refresh-btn').addEventListener('click', () => loadMessages());
+
+    document.querySelectorAll('.filter-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach((b) => {
+          b.classList.remove('active', 'bg-white/10');
+          b.classList.add('text-white/50');
+        });
+        btn.classList.add('active', 'bg-white/10');
+        btn.classList.remove('text-white/50');
+        filter = btn.dataset.filter;
+        renderList();
+      });
+    });
+
+    let searchTimer;
+    $('search').addEventListener('input', () => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => loadMessages(), 300);
+    });
+
+    async function loadMessages() {
+      try {
+        const params = new URLSearchParams();
+        const q = $('search').value.trim();
+        if (q) params.set('search', q);
+        if (filter === 'unread') params.set('status', 'unread');
+        if (filter === 'archived') params.set('archived', 'true');
+        else params.set('archived', 'false');
+
+        const data = await api('/messages?' + params.toString());
+        messages = data.messages || [];
+        if (filter === 'starred') messages = messages.filter((m) => m.starred);
+
+        const unread = (data.stats && data.stats.unread) || 0;
+        const badge = $('unread-badge');
+        if (unread > 0) {
+          badge.textContent = unread + ' unread';
+          badge.classList.remove('hidden');
+        } else badge.classList.add('hidden');
+
+        renderList();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function renderList() {
+      const list = $('msg-list');
+      if (!messages.length) {
+        list.innerHTML = '<p class="p-6 text-center text-white/30 text-sm">No messages</p>';
+        return;
+      }
+      list.innerHTML = messages
+        .map((m) => {
+          const date = new Date(m.createdAt).toLocaleString();
+          const cls = [
+            'msg-item block w-full text-left px-4 py-3 border-b border-white/5 cursor-pointer',
+            m.status === 'unread' ? 'unread' : '',
+            m.id === currentId ? 'active' : '',
+          ].join(' ');
+          return `<button class="${cls}" data-id="${m.id}">
+            <div class="flex justify-between gap-2">
+              <span class="name text-sm truncate ${m.status === 'unread' ? 'text-white' : 'text-white/70'}">${escapeHtml(m.name || 'Unknown')}${m.starred ? ' ★' : ''}</span>
+              <span class="text-[10px] text-white/30 shrink-0">${date}</span>
+            </div>
+            <div class="text-xs text-white/40 truncate mt-0.5">${escapeHtml(m.subject || '(no subject)')}</div>
+            <div class="text-xs text-white/25 truncate mt-0.5">${escapeHtml((m.message || '').slice(0, 80))}</div>
+          </button>`;
+        })
+        .join('');
+
+      list.querySelectorAll('[data-id]').forEach((el) => {
+        el.addEventListener('click', () => openMessage(el.dataset.id));
+      });
+    }
+
+    async function openMessage(id) {
+      currentId = id;
+      renderList();
+      try {
+        const data = await api('/messages/' + id);
+        const m = data.message;
+        $('empty-state').classList.add('hidden');
+        $('detail').classList.remove('hidden');
+        $('d-subject').textContent = m.subject || '(no subject)';
+        $('d-name').textContent = m.name;
+        $('d-email').textContent = m.email;
+        $('d-email').href = 'mailto:' + m.email;
+        $('d-meta').textContent = new Date(m.createdAt).toLocaleString() + (m.country ? ' · ' + m.country : '');
+        $('d-body').textContent = m.message || '';
+        $('d-tech').innerHTML = [
+          m.ip ? 'IP: ' + escapeHtml(m.ip) : '',
+          m.userAgent ? 'Device: ' + escapeHtml(m.userAgent) : '',
+          m.referer ? 'Referrer: ' + escapeHtml(m.referer) : '',
+        ]
+          .filter(Boolean)
+          .map((t) => `<div>${t}</div>`)
+          .join('');
+        $('d-reply').href = `mailto:${encodeURIComponent(m.email)}?subject=${encodeURIComponent('Re: ' + (m.subject || 'Your message'))}`;
+        $('btn-star').textContent = m.starred ? '★ Starred' : '☆ Star';
+        $('btn-read').textContent = m.status === 'unread' ? 'Mark read' : 'Mark unread';
+        $('btn-archive').textContent = m.archived ? 'Unarchive' : 'Archive';
+
+        // refresh list status
+        const local = messages.find((x) => x.id === id);
+        if (local) local.status = 'read';
+        loadMessages();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function patch(id, body) {
+      await api('/messages/' + id, { method: 'PATCH', body: JSON.stringify(body) });
+      await loadMessages();
+      if (currentId === id) openMessage(id);
+    }
+
+    $('btn-star').addEventListener('click', () => {
+      const m = messages.find((x) => x.id === currentId);
+      if (m) patch(currentId, { starred: !m.starred });
+    });
+    $('btn-read').addEventListener('click', () => {
+      const m = messages.find((x) => x.id === currentId);
+      if (m) patch(currentId, { status: m.status === 'unread' ? 'read' : 'unread' });
+    });
+    $('btn-archive').addEventListener('click', () => {
+      const m = messages.find((x) => x.id === currentId);
+      if (m) patch(currentId, { archived: !m.archived });
+    });
+    $('btn-delete').addEventListener('click', async () => {
+      if (!confirm('Delete this message permanently?')) return;
+      await api('/messages/' + currentId, { method: 'DELETE' });
+      currentId = null;
+      $('detail').classList.add('hidden');
+      $('empty-state').classList.remove('hidden');
+      loadMessages();
+    });
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // Auto-login if token exists
+    if (token) showApp();
+  </script>
+</body>
+</html>
