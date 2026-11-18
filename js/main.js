@@ -7,35 +7,15 @@
 
   // ---------- LOADER ----------
   const loader = document.getElementById('loader');
-  const loaderBar = document.getElementById('loader-bar');
-  const loaderText = document.getElementById('loader-text');
-  const texts = ['Initializing experience', 'Calibrating systems', 'Loading particles', 'Almost ready'];
+  if (loader) loader.classList.add('hidden');
 
-  let progress = 0;
-  const loadInterval = setInterval(() => {
-    progress += Math.random() * 18 + 8;
-    if (progress > 100) progress = 100;
-    if (loaderBar) loaderBar.style.width = progress + '%';
-    if (loaderText) {
-      if (progress > 30 && progress < 60) loaderText.textContent = texts[1];
-      else if (progress >= 60 && progress < 90) loaderText.textContent = texts[2];
-      else if (progress >= 90) loaderText.textContent = texts[3];
-    }
+  document.querySelectorAll(
+    '.hero-label, .hero-title-line, .hero-intro, #hero-cta, #hero-status, #scroll-hint, .section-label, .about-text, .stat-card, .timeline-item, #contact-form, #skills h2, #projects h2, #vision h2, #journey h2, #testimonials h2, #journal h2, #contact h2'
+  ).forEach((el) => {
+    el.style.opacity = '1';
+    el.style.transform = 'none';
+  });
 
-    if (progress >= 100) {
-      clearInterval(loadInterval);
-      setTimeout(() => {
-        if (loader) loader.classList.add('hidden');
-        try {
-          initExperience();
-        } catch (err) {
-          console.warn('Init error (non-fatal):', err);
-        }
-      }, 400);
-    }
-  }, 180);
-
-  // ---------- INIT AFTER LOAD ----------
   function initExperience() {
     initLenis();
     initCursor();
@@ -686,4 +666,5 @@
     });
   }
 
+  initExperience();
 })();

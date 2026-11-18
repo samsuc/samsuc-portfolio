@@ -45,8 +45,10 @@
 
       // Portrait
       if (p.portraitUrl) {
+        let url = p.portraitUrl;
+        if (/portrait\.png(\?|$)/.test(url)) url = url.replace('portrait.png', 'portrait.jpg');
         document.querySelectorAll('img.hero-portrait, img[data-profile="portrait"], #hero-portrait').forEach((img) => {
-          img.src = p.portraitUrl;
+          img.src = url;
           img.alt = p.displayName || 'Portrait';
         });
       }

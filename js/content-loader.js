@@ -13,12 +13,16 @@
   }
 
   async function fetchJSON(path) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 4000);
     try {
-      const res = await fetch(API + path);
+      const res = await fetch(API + path, { signal: ctrl.signal });
       if (!res.ok) return null;
       return await res.json();
     } catch {
       return null;
+    } finally {
+      clearTimeout(timer);
     }
   }
 
@@ -82,7 +86,7 @@
           .join('');
         const cat = p.category || 'web';
         const img = p.image
-          ? `<img src="${esc(p.image)}" alt="${esc(p.title)}" class="w-full h-full object-cover" />`
+          ? `<img src="${esc(p.image)}" alt="${esc(p.title)}" class="w-full h-full object-cover" loading="lazy" decoding="async" />`
           : `<div class="absolute inset-0 bg-gradient-to-br from-electric/20 via-navy to-softpurple/20"></div>
              <div class="absolute inset-0 flex items-center justify-center">
                <div class="w-32 h-32 rounded-full border border-white/10 flex items-center justify-center">

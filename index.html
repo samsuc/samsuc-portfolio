@@ -51,14 +51,14 @@
   </script>
   
   <!-- GSAP + ScrollTrigger -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
   
   <!-- Lenis Smooth Scroll -->
-  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
   
   <!-- Three.js for background -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
   
   <link rel="stylesheet" href="css/styles.css" />
 </head>
@@ -198,11 +198,16 @@
             <div class="absolute -inset-16 rounded-full border border-cyan/10 animate-spin-slow pointer-events-none" style="animation-direction: reverse; animation-duration: 25s;"></div>
             
             <div class="relative w-full h-full rounded-3xl overflow-hidden border border-white/10 shadow-[0_0_80px_rgba(214,173,96,0.15)]">
-              <img 
-                src="images/portrait.png" id="hero-portrait" data-profile="portrait" class="hero-portrait"
-                alt="Portrait of Samuel Success — SAMSUC" 
-                class="w-full h-full object-cover object-center scale-105 group-hover:scale-100 transition-transform duration-700 ease-out"
-                id="portrait-img"
+              <img
+                src="images/portrait.jpg"
+                alt="Portrait of Samuel Success — SAMSUC"
+                width="960"
+                height="960"
+                fetchpriority="high"
+                decoding="async"
+                id="hero-portrait"
+                data-profile="portrait"
+                class="hero-portrait w-full h-full object-cover object-center scale-105 group-hover:scale-100 transition-transform duration-700 ease-out"
               />
               <div class="absolute inset-0 bg-gradient-to-t from-void/80 via-transparent to-transparent"></div>
               <div class="absolute inset-0 bg-gradient-to-br from-electric/10 via-transparent to-softpurple/10 mix-blend-overlay"></div>
@@ -533,7 +538,7 @@
     </div>
   </div>
 
-  <script src="js/main.js"></script>
+  <script src="js/main.js" defer></script>
   <script src="js/analytics.js"></script>
   <script src="js/content-loader.js"></script>
   <script src="js/profile-apply.js"></script>
