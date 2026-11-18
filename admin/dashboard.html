@@ -11,21 +11,21 @@
       theme: {
         extend: {
           colors: {
-            void: '#050505',
-            navy: '#08111F',
-            electric: '#00D4FF',
-            cyan: '#22D3EE',
-            softpurple: '#A78BFA',
+            void: '#090D14',
+            navy: '#151C26',
+            electric: '#D6AD60',
+            cyan: '#6689A8',
+            softpurple: '#A3B86C',
           }
         }
       }
     }
   </script>
   <style>
-    body { background: #050505; color: #fff; font-family: Inter, system-ui, sans-serif; }
+    body { background: #090D14; color: #F3F0E8; font-family: Inter, system-ui, sans-serif; }
     .glass { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(12px); }
     .stat-card { transition: transform 0.2s, border-color 0.2s; }
-    .stat-card:hover { transform: translateY(-2px); border-color: rgba(0,212,255,0.25); }
+    .stat-card:hover { transform: translateY(-2px); border-color: rgba(214,173,96,0.25); }
   </style>
 </head>
 <body class="min-h-screen">
@@ -262,12 +262,12 @@
             datasets: [{
               label: 'Pageviews',
               data: series,
-              borderColor: '#00D4FF',
-              backgroundColor: 'rgba(0,212,255,0.1)',
+              borderColor: '#D6AD60',
+              backgroundColor: 'rgba(214,173,96,0.1)',
               fill: true,
               tension: 0.35,
               pointRadius: 3,
-              pointBackgroundColor: '#00D4FF',
+              pointBackgroundColor: '#D6AD60',
             }],
           },
           options: {

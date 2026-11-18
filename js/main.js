@@ -124,13 +124,13 @@
     hoverTargets.forEach(el => {
       el.addEventListener('mouseenter', () => {
         isHovering = true;
-        cursor.style.background = 'rgba(0, 212, 255, 0.85)';
-        trail.style.borderColor = 'rgba(0, 212, 255, 0.8)';
+        cursor.style.background = 'rgba(214, 173, 96, 0.85)';
+        trail.style.borderColor = 'rgba(214, 173, 96, 0.8)';
       });
       el.addEventListener('mouseleave', () => {
         isHovering = false;
         cursor.style.background = 'white';
-        trail.style.borderColor = 'rgba(0, 212, 255, 0.5)';
+        trail.style.borderColor = 'rgba(214, 173, 96, 0.5)';
       });
     });
   }
@@ -567,9 +567,10 @@
       positions[i * 3 + 2] = (Math.random() - 0.5) * 40;
 
       const c = Math.random();
-      colors[i * 3] = c > 0.6 ? 0.05 : 0.15;
-      colors[i * 3 + 1] = c > 0.3 ? 0.85 : 0.55;
-      colors[i * 3 + 2] = 1.0;
+      // champagne gold #D6AD60 or steel blue #6689A8
+      colors[i * 3] = c > 0.6 ? 0.84 : 0.40;
+      colors[i * 3 + 1] = c > 0.6 ? 0.68 : 0.54;
+      colors[i * 3 + 2] = c > 0.6 ? 0.38 : 0.66;
     }
 
     const geometry = new THREE.BufferGeometry();
@@ -646,7 +647,7 @@
         if (p.y < 0 || p.y > h) p.vy *= -1;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0, 212, 255, ${p.alpha})`;
+        ctx.fillStyle = `rgba(214, 173, 96, ${p.alpha})`;
         ctx.fill();
       });
       for (let i = 0; i < particles.length; i++) {
@@ -658,7 +659,7 @@
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(0, 212, 255, ${0.08 * (1 - dist / 110)})`;
+            ctx.strokeStyle = `rgba(214, 173, 96, ${0.08 * (1 - dist / 110)})`;
             ctx.stroke();
           }
         }
