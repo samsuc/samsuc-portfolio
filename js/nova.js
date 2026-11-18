@@ -247,12 +247,12 @@
     const root = document.createElement('div');
     root.id = 'nova-root';
     root.innerHTML = `
-      <div id="nova-panel" role="dialog" aria-label="NOVA assistant">
+      <div id="nova-panel" role="dialog" aria-label="Linden">
         <div id="nova-header">
           <span class="dot"></span>
           <div style="flex:1">
-            <div style="font-weight:600;font-size:14px;letter-spacing:0.04em">NOVA</div>
-            <div style="font-size:10px;color:rgba(255,255,255,0.4)">Samuel's digital guide</div>
+            <div style="font-weight:600;font-size:14px;letter-spacing:0.04em">Linden</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.4)">Guide for this portfolio</div>
           </div>
           <button id="nova-voice-toggle" title="Toggle voice replies" type="button">🔊</button>
           <button id="nova-close" type="button" style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:18px;line-height:1">×</button>
@@ -266,11 +266,11 @@
         <div id="nova-actions"></div>
         <div id="nova-input-row">
           <button id="nova-mic" type="button" title="Voice input">🎤</button>
-          <input id="nova-input" type="text" placeholder="Ask NOVA anything…" autocomplete="off" />
+          <input id="nova-input" type="text" placeholder="Ask about the work…" autocomplete="off" />
           <button id="nova-send" type="button">→</button>
         </div>
       </div>
-      <div id="nova-orb" role="button" tabindex="0" aria-label="Open NOVA">
+      <div id="nova-orb" role="button" tabindex="0" aria-label="Open Linden">
         <span class="ring"></span>
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#090D14" stroke-width="2">
           <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>
@@ -317,7 +317,7 @@
     setTimeout(() => {
       setOpen(true);
       botSay(
-        "Hello, I'm NOVA.\nWelcome to Samuel Success' digital universe.\nI'm here to guide you through his work, projects, vision, and experience.\nFeel free to ask me anything."
+        "Hello, I'm Linden.\nI can walk you through Samuel's work, or you can look around on your own."
       );
     }, 2800);
 
@@ -701,7 +701,7 @@
     if (subject) subject.value = 'Hire inquiry — ' + (data.type || 'project');
     if (message) {
       message.value = [
-        'Hire inquiry via NOVA',
+        'Hire inquiry via Linden',
         'Project type: ' + (data.type || '—'),
         'Budget: ' + (data.budget || '—'),
         'Timeline: ' + (data.timeline || '—'),
@@ -752,7 +752,7 @@
       a.href = 'assets/Samuel-Success-CV.pdf';
       a.download = 'Samuel-Success-CV.pdf';
       a.click();
-      if (window.samsucTrack) window.samsucTrack('resume_download', { label: 'NOVA' });
+      if (window.samsucTrack) window.samsucTrack('resume_download', { label: 'Linden' });
       return botSay("Starting the CV download now. You can also use the Download CV button in the header.");
     }
     if (/github/.test(q)) {
@@ -807,9 +807,9 @@
     if (/value|principle/.test(q)) {
       return botSay(`Core values: ${KB.values.join(', ')}.`);
     }
-    if (/who are you|what are you|your name|nova/.test(q)) {
+    if (/who are you|what are you|your name|nova|linden/.test(q)) {
       return botSay(
-        "I'm NOVA — Samuel Success' digital guide. I help visitors explore his work, vision, and how to work with him. Think of me as a calm concierge for this portfolio."
+        "I'm Linden, a guide for this portfolio. I can point you to Samuel's projects, background, and how to get in touch."
       );
     }
     if (/start tour|guided tour|take a tour/.test(q)) {
