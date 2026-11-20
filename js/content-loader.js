@@ -200,22 +200,7 @@
       window.LINDEN_RAG.rebuild();
     }
 
-    // Re-run scroll reveals if GSAP is present
-    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-      gsap.utils.toArray('.skill-card, .project-card').forEach((el, i) => {
-        gsap.fromTo(
-          el,
-          { opacity: 0, y: 24 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            delay: i * 0.05,
-            scrollTrigger: { trigger: el, start: 'top 90%' },
-          }
-        );
-      });
-    }
+    if (typeof window.samsucRevealCards === 'function') window.samsucRevealCards();
   }
 
   if (document.readyState === 'loading') {

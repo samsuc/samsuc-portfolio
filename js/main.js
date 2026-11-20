@@ -9,12 +9,16 @@
   const loader = document.getElementById('loader');
   if (loader) loader.classList.add('hidden');
 
-  document.querySelectorAll(
-    '.hero-label, .hero-title-line, .hero-intro, #hero-cta, #hero-status, #scroll-hint, .section-label, .about-text, .stat-card, .timeline-item, #contact-form, #skills h2, #projects h2, #vision h2, #journey h2, #testimonials h2, #journal h2, #contact h2'
-  ).forEach((el) => {
-    el.style.opacity = '1';
-    el.style.transform = 'none';
-  });
+  function revealStatic() {
+    document.querySelectorAll(
+      '.hero-label, .hero-title-line, .hero-intro, #hero-cta, #hero-status, #scroll-hint, .section-label, .about-text, .stat-card, .timeline-item, #contact-form, h2'
+    ).forEach((el) => {
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+    });
+  }
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) revealStatic();
+  else setTimeout(() => { if (typeof gsap === 'undefined') revealStatic(); }, 1800);
 
   function initExperience() {
     initLenis();
@@ -140,105 +144,68 @@
 
   // ---------- HERO ANIMATIONS ----------
   function initHeroAnimations() {
-    if (typeof gsap === 'undefined') return;
-
-    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-
-    tl.to('.hero-label', { opacity: 1, y: 0, duration: 0.8 }, 0.2)
-      .to('.hero-title-line', { opacity: 1, y: 0, duration: 1, stagger: 0.12 }, 0.4)
-      .to('.hero-intro', { opacity: 1, y: 0, duration: 0.7, stagger: 0.1 }, 0.9)
-      .to('#hero-cta', { opacity: 1, y: 0, duration: 0.7 }, 1.2)
-      .to('#hero-status', { opacity: 1, duration: 0.6 }, 1.4)
-      .to('#scroll-hint', { opacity: 1, duration: 0.6 }, 1.6);
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    const pieces = ['.hero-label', '.hero-title-line', '.hero-intro', '#hero-cta', '#hero-status', '#scroll-hint'];
+    pieces.forEach((sel, i) => {
+      gsap.utils.toArray(sel).forEach((el, n) => {
+        gsap.fromTo(el, { opacity: 0, y: 24 }, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          delay: i * 0.08 + n * 0.05,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '#hero',
+            start: 'top 80%',
+            toggleActions: 'play reverse play reverse',
+          },
+        });
+      });
+    });
   }
 
   // ---------- SCROLL TRIGGERS ----------
+  function revealOnScroll(els, opts) {
+    gsap.utils.toArray(els).forEach((el, i) => {
+      if (el.dataset.revealBound) return;
+      el.dataset.revealBound = '1';
+      gsap.fromTo(el, { opacity: 0, y: opts.y == null ? 28 : opts.y }, {
+        opacity: 1,
+        y: 0,
+        duration: opts.duration || 0.75,
+        delay: (opts.stagger || 0) * i,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: opts.trigger || el,
+          start: opts.start || 'top 88%',
+          toggleActions: 'play reverse play reverse',
+        },
+      });
+    });
+  }
+
   function initScrollTriggers() {
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
     gsap.registerPlugin(ScrollTrigger);
 
-    gsap.utils.toArray('.section-label').forEach(el => {
-      gsap.to(el, {
-        opacity: 1,
-        duration: 0.8,
-        scrollTrigger: { trigger: el, start: 'top 85%' }
-      });
-    });
-
-    gsap.utils.toArray('h2').forEach(el => {
-      if (el.closest('#hero')) return;
-      gsap.to(el, {
-        opacity: 1,
-        y: 0,
-        duration: 0.9,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 85%' }
-      });
-    });
-
-    gsap.utils.toArray('.about-text').forEach((el, i) => {
-      gsap.to(el, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        delay: i * 0.1,
-        scrollTrigger: { trigger: el, start: 'top 88%' }
-      });
-    });
-
-    gsap.utils.toArray('.stat-card').forEach((el, i) => {
-      gsap.to(el, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        delay: i * 0.08,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 90%' }
-      });
-    });
-
-    gsap.utils.toArray('.skill-card').forEach((el, i) => {
-      gsap.to(el, {
-        opacity: 1,
-        y: 0,
-        duration: 0.7,
-        delay: i * 0.07,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: '#skills-grid', start: 'top 80%' }
-      });
-    });
-
-    gsap.utils.toArray('.project-card').forEach((el, i) => {
-      gsap.to(el, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        delay: i * 0.1,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: '#projects-grid', start: 'top 85%' }
-      });
-    });
-
-    gsap.utils.toArray('.timeline-item').forEach((el, i) => {
-      gsap.to(el, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        delay: i * 0.15,
-        scrollTrigger: { trigger: el, start: 'top 88%' }
-      });
-    });
-
-    const contactForm = document.getElementById('contact-form');
-    if (contactForm) {
-      gsap.to(contactForm, {
-        opacity: 1,
-        y: 0,
-        duration: 0.9,
-        scrollTrigger: { trigger: contactForm, start: 'top 85%' }
-      });
-    }
+    revealOnScroll('.section-label', { y: 12, duration: 0.7, start: 'top 88%' });
+    revealOnScroll(gsap.utils.toArray('h2').filter((el) => !el.closest('#hero')), { start: 'top 88%' });
+    revealOnScroll('.about-text', { stagger: 0.06, start: 'top 90%' });
+    revealOnScroll('.stat-card', { stagger: 0.06, start: 'top 90%' });
+    revealOnScroll('.timeline-item', { stagger: 0.08, start: 'top 90%' });
+    revealOnScroll('#contact-form', { start: 'top 88%' });
+    revealOnScroll('.skill-card', { stagger: 0.04, start: 'top 90%' });
+    revealOnScroll('.project-card', { stagger: 0.05, start: 'top 90%' });
+    ScrollTrigger.refresh();
   }
+
+  window.samsucRevealCards = function () {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+    revealOnScroll('.skill-card', { stagger: 0.05, start: 'top 90%' });
+    revealOnScroll('.project-card', { stagger: 0.06, start: 'top 90%' });
+    ScrollTrigger.refresh();
+  };
 
   // ---------- COUNTERS (safe) ----------
   function initCounters() {
@@ -250,19 +217,21 @@
       ScrollTrigger.create({
         trigger: counter,
         start: 'top 90%',
-        once: true,
-        onEnter: () => {
-          const obj = { val: 0 };
-          gsap.to(obj, {
-            val: target,
-            duration: 2,
-            ease: 'power2.out',
-            onUpdate: () => {
-              counter.textContent = Math.round(obj.val);
-            }
-          });
-        }
+        onEnter: () => run(),
+        onEnterBack: () => run(),
       });
+      function run() {
+        const obj = { val: 0 };
+        gsap.to(obj, {
+          val: target,
+          duration: 1.6,
+          ease: 'power2.out',
+          overwrite: true,
+          onUpdate: () => {
+            counter.textContent = Math.round(obj.val);
+          }
+        });
+      }
     });
   }
 
