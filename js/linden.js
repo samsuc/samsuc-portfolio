@@ -1,5 +1,5 @@
 /**
- * NOVA — Digital representative for Samuel Success (SAMSUC)
+ * LINDEN — Digital representative for Samuel Success (SAMSUC)
  * Knowledge-first assistant with navigation, hire flow, and LLM-ready architecture.
  */
 (function () {
@@ -95,40 +95,40 @@
 
   /* ========== DOM ========== */
   function injectUI() {
-    if (document.getElementById('nova-root')) return;
+    if (document.getElementById('linden-root')) return;
 
     const style = document.createElement('style');
     style.textContent = `
-      #nova-root { position: fixed; z-index: 9999; bottom: 24px; right: 24px; font-family: Inter, system-ui, sans-serif; }
-      #nova-orb {
+      #linden-root { position: fixed; z-index: 9999; bottom: 24px; right: 24px; font-family: Inter, system-ui, sans-serif; }
+      #linden-orb {
         width: 56px; height: 56px; border-radius: 50%;
         background: radial-gradient(circle at 30% 30%, #6689A8, #D6AD60 40%, #151C26 70%);
         box-shadow: 0 0 24px rgba(214,173,96,0.45), 0 0 48px rgba(214,173,96,0.15);
         border: 1px solid rgba(214,173,96,0.4);
         cursor: pointer; display: flex; align-items: center; justify-content: center;
-        animation: nova-breathe 3.2s ease-in-out infinite;
+        animation: linden-breathe 3.2s ease-in-out infinite;
         transition: transform 0.25s ease;
       }
-      #nova-orb:hover { transform: scale(1.06); }
-      #nova-orb.thinking { animation: nova-pulse 1s ease-in-out infinite; }
-      #nova-orb .ring {
+      #linden-orb:hover { transform: scale(1.06); }
+      #linden-orb.thinking { animation: linden-pulse 1s ease-in-out infinite; }
+      #linden-orb .ring {
         position: absolute; width: 72px; height: 72px; border-radius: 50%;
-        border: 1px solid rgba(214,173,96,0.25); animation: nova-float 4s ease-in-out infinite;
+        border: 1px solid rgba(214,173,96,0.25); animation: linden-float 4s ease-in-out infinite;
         pointer-events: none;
       }
-      @keyframes nova-breathe {
+      @keyframes linden-breathe {
         0%, 100% { box-shadow: 0 0 20px rgba(214,173,96,0.35); transform: translateY(0); }
         50% { box-shadow: 0 0 32px rgba(214,173,96,0.55); transform: translateY(-3px); }
       }
-      @keyframes nova-pulse {
+      @keyframes linden-pulse {
         0%, 100% { box-shadow: 0 0 16px rgba(214,173,96,0.3); }
         50% { box-shadow: 0 0 40px rgba(214,173,96,0.7); }
       }
-      @keyframes nova-float {
+      @keyframes linden-float {
         0%, 100% { transform: scale(1); opacity: 0.5; }
         50% { transform: scale(1.08); opacity: 0.2; }
       }
-      #nova-panel {
+      #linden-panel {
         position: absolute; bottom: 72px; right: 0;
         width: min(380px, calc(100vw - 32px));
         height: min(520px, calc(100vh - 120px));
@@ -137,107 +137,107 @@
         box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(214,173,96,0.08);
         display: none; flex-direction: column; overflow: hidden; color: #e5e5e5;
       }
-      #nova-panel.open { display: flex; animation: nova-in 0.35s ease; }
-      @keyframes nova-in {
+      #linden-panel.open { display: flex; animation: linden-in 0.35s ease; }
+      @keyframes linden-in {
         from { opacity: 0; transform: translateY(12px) scale(0.96); }
         to { opacity: 1; transform: none; }
       }
-      #nova-header {
+      #linden-header {
         padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.06);
         display: flex; align-items: center; gap: 10px;
       }
-      #nova-header .dot {
+      #linden-header .dot {
         width: 10px; height: 10px; border-radius: 50%; background: #D6AD60;
         box-shadow: 0 0 10px #D6AD60;
       }
-      #nova-messages {
+      #linden-messages {
         flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px;
       }
-      .nova-msg {
+      .linden-msg {
         max-width: 92%; padding: 10px 14px; border-radius: 14px; font-size: 13.5px; line-height: 1.5;
-        animation: nova-msg-in 0.25s ease;
+        animation: linden-msg-in 0.25s ease;
       }
-      @keyframes nova-msg-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-      .nova-msg.bot {
+      @keyframes linden-msg-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+      .linden-msg.bot {
         align-self: flex-start; background: rgba(214,173,96,0.08); border: 1px solid rgba(214,173,96,0.15);
       }
-      .nova-msg.user {
+      .linden-msg.user {
         align-self: flex-end; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
       }
-      .nova-typing {
+      .linden-typing {
         align-self: flex-start; display: flex; gap: 4px; padding: 12px 16px;
       }
-      .nova-typing span {
+      .linden-typing span {
         width: 6px; height: 6px; border-radius: 50%; background: #D6AD60; opacity: 0.5;
-        animation: nova-dot 1.2s infinite ease-in-out;
+        animation: linden-dot 1.2s infinite ease-in-out;
       }
-      .nova-typing span:nth-child(2) { animation-delay: 0.15s; }
-      .nova-typing span:nth-child(3) { animation-delay: 0.3s; }
-      @keyframes nova-dot {
+      .linden-typing span:nth-child(2) { animation-delay: 0.15s; }
+      .linden-typing span:nth-child(3) { animation-delay: 0.3s; }
+      @keyframes linden-dot {
         0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
         40% { transform: translateY(-4px); opacity: 1; }
       }
-      #nova-actions {
+      #linden-actions {
         padding: 8px 12px; display: flex; flex-wrap: wrap; gap: 6px;
         border-top: 1px solid rgba(255,255,255,0.06);
       }
-      #nova-actions button {
+      #linden-actions button {
         font-size: 11px; padding: 5px 10px; border-radius: 999px;
         border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04);
         color: rgba(255,255,255,0.7); cursor: pointer; transition: 0.2s;
       }
-      #nova-actions button:hover {
+      #linden-actions button:hover {
         border-color: rgba(214,173,96,0.4); color: #D6AD60; background: rgba(214,173,96,0.08);
       }
-      #nova-input-row {
+      #linden-input-row {
         padding: 10px 12px 12px; display: flex; gap: 8px; border-top: 1px solid rgba(255,255,255,0.06);
       }
-      #nova-input {
+      #linden-input {
         flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
         border-radius: 12px; padding: 10px 12px; color: #fff; font-size: 13px; outline: none;
       }
-      #nova-input:focus { border-color: rgba(214,173,96,0.4); }
-      #nova-send, #nova-mic, #nova-voice-toggle {
+      #linden-input:focus { border-color: rgba(214,173,96,0.4); }
+      #linden-send, #linden-mic, #linden-voice-toggle {
         width: 40px; height: 40px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
         background: rgba(214,173,96,0.15); color: #D6AD60; cursor: pointer; font-size: 14px;
       }
-      #nova-send:hover { background: rgba(214,173,96,0.3); }
-      #nova-voice-toggle.on { background: rgba(214,173,96,0.35); border-color: #D6AD60; }
-      #nova-wave {
+      #linden-send:hover { background: rgba(214,173,96,0.3); }
+      #linden-voice-toggle.on { background: rgba(214,173,96,0.35); border-color: #D6AD60; }
+      #linden-wave {
         display: none; height: 24px; align-items: center; justify-content: center; gap: 3px; padding: 0 12px;
       }
-      #nova-wave.active { display: flex; }
-      #nova-wave i {
+      #linden-wave.active { display: flex; }
+      #linden-wave i {
         width: 3px; height: 8px; background: #D6AD60; border-radius: 2px;
-        animation: nova-wave 0.8s ease-in-out infinite;
+        animation: linden-wave 0.8s ease-in-out infinite;
       }
-      #nova-wave i:nth-child(2) { animation-delay: 0.1s; }
-      #nova-wave i:nth-child(3) { animation-delay: 0.2s; }
-      #nova-wave i:nth-child(4) { animation-delay: 0.3s; }
-      #nova-wave i:nth-child(5) { animation-delay: 0.15s; }
-      @keyframes nova-wave {
+      #linden-wave i:nth-child(2) { animation-delay: 0.1s; }
+      #linden-wave i:nth-child(3) { animation-delay: 0.2s; }
+      #linden-wave i:nth-child(4) { animation-delay: 0.3s; }
+      #linden-wave i:nth-child(5) { animation-delay: 0.15s; }
+      @keyframes linden-wave {
         0%, 100% { height: 6px; opacity: 0.5; }
         50% { height: 16px; opacity: 1; }
       }
       @media (max-width: 480px) {
-        #nova-root { bottom: 16px; right: 16px; }
-        #nova-panel { height: min(70vh, 480px); }
+        #linden-root { bottom: 16px; right: 16px; }
+        #linden-panel { height: min(70vh, 480px); }
       }
-      .nova-choices { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-      .nova-choices button {
+      .linden-choices { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+      .linden-choices button {
         font-size: 12px; padding: 8px 14px; border-radius: 999px; cursor: pointer;
         border: 1px solid rgba(214,173,96,0.35); background: rgba(214,173,96,0.12); color: #D6AD60;
       }
-      .nova-choices button.secondary {
+      .linden-choices button.secondary {
         border-color: rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7);
       }
-      .nova-choices button:hover { filter: brightness(1.15); }
-      #nova-tour-bar {
+      .linden-choices button:hover { filter: brightness(1.15); }
+      #linden-tour-bar {
         display: none; padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.06);
         font-size: 11px; color: rgba(255,255,255,0.5); align-items: center; justify-content: space-between;
       }
-      #nova-tour-bar.active { display: flex; }
-      #nova-tour-bar button {
+      #linden-tour-bar.active { display: flex; }
+      #linden-tour-bar button {
         font-size: 11px; padding: 4px 10px; border-radius: 999px; cursor: pointer;
         border: 1px solid rgba(255,255,255,0.15); background: transparent; color: rgba(255,255,255,0.6);
       }
@@ -245,32 +245,32 @@
     document.head.appendChild(style);
 
     const root = document.createElement('div');
-    root.id = 'nova-root';
+    root.id = 'linden-root';
     root.innerHTML = `
-      <div id="nova-panel" role="dialog" aria-label="Linden">
-        <div id="nova-header">
+      <div id="linden-panel" role="dialog" aria-label="Linden">
+        <div id="linden-header">
           <span class="dot"></span>
           <div style="flex:1">
             <div style="font-weight:600;font-size:14px;letter-spacing:0.04em">Linden</div>
             <div style="font-size:10px;color:rgba(255,255,255,0.4)">Guide for this portfolio</div>
           </div>
-          <button id="nova-voice-toggle" title="Toggle voice replies" type="button">🔊</button>
-          <button id="nova-close" type="button" style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:18px;line-height:1">×</button>
+          <button id="linden-voice-toggle" title="Toggle voice replies" type="button">🔊</button>
+          <button id="linden-close" type="button" style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:18px;line-height:1">×</button>
         </div>
-        <div id="nova-tour-bar">
-          <span id="nova-tour-label">Guided tour</span>
-          <button type="button" id="nova-tour-skip">Skip tour</button>
+        <div id="linden-tour-bar">
+          <span id="linden-tour-label">Guided tour</span>
+          <button type="button" id="linden-tour-skip">Skip tour</button>
         </div>
-        <div id="nova-messages"></div>
-        <div id="nova-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-        <div id="nova-actions"></div>
-        <div id="nova-input-row">
-          <button id="nova-mic" type="button" title="Voice input">🎤</button>
-          <input id="nova-input" type="text" placeholder="Ask about the work…" autocomplete="off" />
-          <button id="nova-send" type="button">→</button>
+        <div id="linden-messages"></div>
+        <div id="linden-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+        <div id="linden-actions"></div>
+        <div id="linden-input-row">
+          <button id="linden-mic" type="button" title="Voice input">🎤</button>
+          <input id="linden-input" type="text" placeholder="Ask about the work…" autocomplete="off" />
+          <button id="linden-send" type="button">→</button>
         </div>
       </div>
-      <div id="nova-orb" role="button" tabindex="0" aria-label="Open Linden">
+      <div id="linden-orb" role="button" tabindex="0" aria-label="Open Linden">
         <span class="ring"></span>
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#090D14" stroke-width="2">
           <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>
@@ -291,7 +291,7 @@
       ['GitHub', 'open github'],
       ['LinkedIn', 'open linkedin'],
     ];
-    const actEl = document.getElementById('nova-actions');
+    const actEl = document.getElementById('linden-actions');
     actions.forEach(([label, q]) => {
       const b = document.createElement('button');
       b.type = 'button';
@@ -300,18 +300,18 @@
       actEl.appendChild(b);
     });
 
-    document.getElementById('nova-orb').addEventListener('click', toggle);
-    document.getElementById('nova-close').addEventListener('click', () => setOpen(false));
-    document.getElementById('nova-send').addEventListener('click', sendFromInput);
-    document.getElementById('nova-input').addEventListener('keydown', (e) => {
+    document.getElementById('linden-orb').addEventListener('click', toggle);
+    document.getElementById('linden-close').addEventListener('click', () => setOpen(false));
+    document.getElementById('linden-send').addEventListener('click', sendFromInput);
+    document.getElementById('linden-input').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') sendFromInput();
     });
-    document.getElementById('nova-voice-toggle').addEventListener('click', () => {
+    document.getElementById('linden-voice-toggle').addEventListener('click', () => {
       voiceOn = !voiceOn;
-      document.getElementById('nova-voice-toggle').classList.toggle('on', voiceOn);
-      document.getElementById('nova-voice-toggle').textContent = voiceOn ? '🔊' : '🔇';
+      document.getElementById('linden-voice-toggle').classList.toggle('on', voiceOn);
+      document.getElementById('linden-voice-toggle').textContent = voiceOn ? '🔊' : '🔇';
     });
-    document.getElementById('nova-mic').addEventListener('click', startListening);
+    document.getElementById('linden-mic').addEventListener('click', startListening);
 
     // Intro after delay
     setTimeout(() => {
@@ -327,7 +327,7 @@
       offerTour();
     }, 30000);
 
-    document.getElementById('nova-tour-skip').addEventListener('click', skipTour);
+    document.getElementById('linden-tour-skip').addEventListener('click', skipTour);
 
     resetIdle();
     ['mousemove', 'keydown', 'click'].forEach((ev) =>
@@ -342,7 +342,7 @@
 
   function setOpen(v) {
     open = v;
-    document.getElementById('nova-panel').classList.toggle('open', open);
+    document.getElementById('linden-panel').classList.toggle('open', open);
   }
   function toggle() {
     setOpen(!open);
@@ -400,12 +400,12 @@
   }
 
   function addMsgWithChoices(text, choices) {
-    const box = document.getElementById('nova-messages');
+    const box = document.getElementById('linden-messages');
     const div = document.createElement('div');
-    div.className = 'nova-msg bot';
+    div.className = 'linden-msg bot';
     div.textContent = text;
     const row = document.createElement('div');
-    row.className = 'nova-choices';
+    row.className = 'linden-choices';
     choices.forEach((c) => {
       const b = document.createElement('button');
       b.type = 'button';
@@ -442,7 +442,7 @@
   function startTour() {
     tourActive = true;
     tourStep = -1;
-    document.getElementById('nova-tour-bar').classList.add('active');
+    document.getElementById('linden-tour-bar').classList.add('active');
     botSay("Great — let's begin. You can skip anytime from the top of this panel.");
     setTimeout(nextTourStep, 1600);
   }
@@ -450,7 +450,7 @@
   function skipTour() {
     tourActive = false;
     tourStep = -1;
-    document.getElementById('nova-tour-bar').classList.remove('active');
+    document.getElementById('linden-tour-bar').classList.remove('active');
     botSay("Tour skipped. Explore freely, or ask me anything about Samuel's work.");
   }
 
@@ -459,12 +459,12 @@
     tourStep += 1;
     if (tourStep >= TOUR_STEPS.length) {
       tourActive = false;
-      document.getElementById('nova-tour-bar').classList.remove('active');
+      document.getElementById('linden-tour-bar').classList.remove('active');
       botSay("That's the tour. If you'd like to go deeper on any section, just ask.");
       return;
     }
     const step = TOUR_STEPS[tourStep];
-    document.getElementById('nova-tour-label').textContent =
+    document.getElementById('linden-tour-label').textContent =
       'Tour ' + (tourStep + 1) + '/' + TOUR_STEPS.length + ' · ' + step.id;
     const el = document.getElementById(step.id === 'hero' ? 'hero' : step.id);
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -480,7 +480,7 @@
           { label: 'Projects', primary: false, action: 'skills-projects' },
         ]);
         tourActive = false;
-        document.getElementById('nova-tour-bar').classList.remove('active');
+        document.getElementById('linden-tour-bar').classList.remove('active');
       } else {
         setTimeout(nextTourStep, 5500);
       }
@@ -566,9 +566,9 @@
   }
 
   function addMsg(text, who) {
-    const box = document.getElementById('nova-messages');
+    const box = document.getElementById('linden-messages');
     const div = document.createElement('div');
-    div.className = 'nova-msg ' + who;
+    div.className = 'linden-msg ' + who;
     div.textContent = text;
     box.appendChild(div);
     box.scrollTop = box.scrollHeight;
@@ -576,20 +576,20 @@
   }
 
   function showTyping(show) {
-    const box = document.getElementById('nova-messages');
-    let t = document.getElementById('nova-typing');
+    const box = document.getElementById('linden-messages');
+    let t = document.getElementById('linden-typing');
     if (show) {
       if (!t) {
         t = document.createElement('div');
-        t.id = 'nova-typing';
-        t.className = 'nova-typing';
+        t.id = 'linden-typing';
+        t.className = 'linden-typing';
         t.innerHTML = '<span></span><span></span><span></span>';
         box.appendChild(t);
       }
-      document.getElementById('nova-orb').classList.add('thinking');
+      document.getElementById('linden-orb').classList.add('thinking');
     } else {
       if (t) t.remove();
-      document.getElementById('nova-orb').classList.remove('thinking');
+      document.getElementById('linden-orb').classList.remove('thinking');
     }
     box.scrollTop = box.scrollHeight;
   }
@@ -599,7 +599,7 @@
     const u = new SpeechSynthesisUtterance(text.replace(/\n/g, ' '));
     u.rate = 1;
     u.pitch = 1;
-    const wave = document.getElementById('nova-wave');
+    const wave = document.getElementById('linden-wave');
     wave.classList.add('active');
     u.onend = () => wave.classList.remove('active');
     speechSynthesis.speak(u);
@@ -616,7 +616,7 @@
   }
 
   function sendFromInput() {
-    const input = document.getElementById('nova-input');
+    const input = document.getElementById('linden-input');
     const q = input.value.trim();
     if (!q) return;
     input.value = '';
@@ -739,7 +739,7 @@
       scrollToId('blog');
       return botSay("Opening the Blog section — latest published writing appears there.");
     }
-    if (/about|who is|tell me about|biography|who are you/.test(q) && !/nova/.test(q)) {
+    if (/about|who is|tell me about|biography|who are you/.test(q) && !/linden/.test(q)) {
       scrollToId('about');
       return botSay(`${KB.about}\n\nTagline: ${KB.tagline}\n\n"${KB.quote}"`);
     }
@@ -807,7 +807,7 @@
     if (/value|principle/.test(q)) {
       return botSay(`Core values: ${KB.values.join(', ')}.`);
     }
-    if (/who are you|what are you|your name|nova|linden/.test(q)) {
+    if (/who are you|what are you|your name|linden|linden/.test(q)) {
       return botSay(
         "I'm Linden, a guide for this portfolio. I can point you to Samuel's projects, background, and how to get in touch."
       );
@@ -838,10 +838,10 @@
 
     // RAG fallback — retrieve from live CMS + knowledge index
     (async () => {
-      if (window.NOVA_RAG && window.NOVA_RAG.isReady()) {
+      if (window.LINDEN_RAG && window.LINDEN_RAG.isReady()) {
         showTyping(true);
         try {
-          const result = await window.NOVA_RAG.answer(raw);
+          const result = await window.LINDEN_RAG.answer(raw);
           showTyping(false);
           addMsg(result.text, 'bot');
           speak(result.text);
@@ -863,8 +863,8 @@
 
   /* ========== FUTURE LLM HOOK ========== */
   /**
-   * window.NOVA_LLM = async (messages, context) => string
-   * If defined, NOVA can route complex queries here (OpenAI / Anthropic / local).
+   * window.LINDEN_LLM = async (messages, context) => string
+   * If defined, LINDEN can route complex queries here (OpenAI / Anthropic / local).
    * context includes KB snapshot + memory for RAG-style grounding.
    */
   /**
@@ -873,11 +873,11 @@
    * - Navigation: scrollToId
    * - Tour: startTour / skipTour / TOUR_STEPS
    * - Proactive: checkSectionProactive / onScrollAssist
-   * - RAG: window.NOVA_RAG
-   * - LLM: window.NOVA_LLM (OpenAI / Anthropic / Gemini / local)
-   * Future: multilingual, calendar booking, onboarding plugins via NOVA.plugins
+   * - RAG: window.LINDEN_RAG
+   * - LLM: window.LINDEN_LLM (OpenAI / Anthropic / Gemini / local)
+   * Future: multilingual, calendar booking, onboarding plugins via LINDEN.plugins
    */
-  window.NOVA = {
+  window.LINDEN = {
     KB,
     memory,
     ask: handleUser,
@@ -886,7 +886,7 @@
     skipTour,
     offerTour,
     refreshKnowledge: function () {
-      if (window.NOVA_RAG) return window.NOVA_RAG.rebuild();
+      if (window.LINDEN_RAG) return window.LINDEN_RAG.rebuild();
     },
     plugins: {},
     registerPlugin: function (name, fn) {

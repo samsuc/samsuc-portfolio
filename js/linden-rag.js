@@ -1,8 +1,8 @@
 /**
- * NOVA RAG — Retrieval layer over live portfolio content.
+ * LINDEN RAG — Retrieval layer over live portfolio content.
  * Indexes projects, skills, testimonials, posts + static profile docs.
  * Pure JS TF–IDF + cosine similarity (no external ML deps).
- * Ready to swap embedding backend via window.NOVA_EMBED.
+ * Ready to swap embedding backend via window.LINDEN_EMBED.
  */
 (function () {
   'use strict';
@@ -96,7 +96,7 @@
     if (!ready || !corpus.length) return [];
 
     // Optional external embeddings
-    if (typeof window.NOVA_EMBED === 'function') {
+    if (typeof window.LINDEN_EMBED === 'function') {
       // Placeholder: custom embedders can replace this path later
     }
 
@@ -129,7 +129,7 @@
     const docs = [];
 
     // Static profile documents (always present)
-    const staticProfile = window.NOVA && window.NOVA.KB ? window.NOVA.KB : null;
+    const staticProfile = window.LINDEN && window.LINDEN.KB ? window.LINDEN.KB : null;
     if (staticProfile) {
       docs.push(
         doc('profile-about', `About ${staticProfile.name}. ${staticProfile.about} ${staticProfile.tagline}`, {
@@ -242,14 +242,14 @@
   }
 
   /**
-   * Answer using retrieved context. Uses NOVA_LLM if provided, else extractive synthesis.
+   * Answer using retrieved context. Uses LINDEN_LLM if provided, else extractive synthesis.
    */
   async function answerWithRAG(query) {
     const { context, hits } = buildContext(query, 5);
 
-    if (typeof window.NOVA_LLM === 'function') {
+    if (typeof window.LINDEN_LLM === 'function') {
       try {
-        const reply = await window.NOVA_LLM(
+        const reply = await window.LINDEN_LLM(
           [
             {
               role: 'system',
@@ -265,7 +265,7 @@
         );
         if (reply) return { text: reply, hits, source: 'llm' };
       } catch (e) {
-        console.warn('[NOVA RAG] LLM error', e);
+        console.warn('[LINDEN RAG] LLM error', e);
       }
     }
 
@@ -301,7 +301,7 @@
   }
 
   // Public API
-  window.NOVA_RAG = {
+  window.LINDEN_RAG = {
     rebuild: rebuildFromCMS,
     retrieve,
     buildContext,
@@ -310,11 +310,11 @@
     size: () => corpus.length,
   };
 
-  // Auto-index when DOM ready (after NOVA KB exists)
+  // Auto-index when DOM ready (after LINDEN KB exists)
   function boot() {
     const run = () =>
       rebuildFromCMS().then((r) => {
-        console.info('[NOVA RAG] indexed', r.count, 'documents');
+        console.info('[LINDEN RAG] indexed', r.count, 'documents');
       });
     run();
     // Refresh periodically so admin updates flow in without reload

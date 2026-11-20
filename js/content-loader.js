@@ -195,9 +195,9 @@
     if (postsRes?.posts) renderPosts(postsRes.posts);
     else renderPosts([]);
 
-    // Keep NOVA knowledge in sync with CMS
-    if (window.NOVA_RAG && window.NOVA_RAG.rebuild) {
-      window.NOVA_RAG.rebuild();
+    // Keep LINDEN knowledge in sync with CMS
+    if (window.LINDEN_RAG && window.LINDEN_RAG.rebuild) {
+      window.LINDEN_RAG.rebuild();
     }
 
     // Re-run scroll reveals if GSAP is present

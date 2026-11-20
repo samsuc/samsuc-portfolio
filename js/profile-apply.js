@@ -80,9 +80,9 @@
         document.title = p.displayName + (p.brand ? ' — ' + p.brand : '');
       }
 
-      // Sync NOVA knowledge
-      if (window.NOVA && window.NOVA.KB) {
-        const kb = window.NOVA.KB;
+      // Sync LINDEN knowledge
+      if (window.LINDEN && window.LINDEN.KB) {
+        const kb = window.LINDEN.KB;
         kb.name = p.displayName || kb.name;
         kb.brand = p.brand || kb.brand;
         kb.tagline = p.tagline || kb.tagline;
@@ -97,8 +97,8 @@
         if (p.linkedin) kb.socials.linkedin = p.linkedin;
         if (p.x) kb.socials.x = p.x;
       }
-      if (window.NOVA_RAG && window.NOVA_RAG.rebuild) {
-        window.NOVA_RAG.rebuild();
+      if (window.LINDEN_RAG && window.LINDEN_RAG.rebuild) {
+        window.LINDEN_RAG.rebuild();
       }
 
       window.__SAMSUC_PROFILE__ = p;
